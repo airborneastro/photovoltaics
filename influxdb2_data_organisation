@@ -19,6 +19,8 @@ generatedWh     Energie Erzeugung           generated energy
 batchargeWh     Energie Batterieladung      battery charged energy
 batdischargeWh  Energie Batterieentladung   battery discharged energy
 batSOC (unit %) Batterie Ladezustand (%)    battery state of charge (%)
+priceIn (€)     Stromkosten Einkauf/kWh     purchase cost per kWh
+priceOut (€)    Einspeisevergütung/kWh      feed-in tariff per kWh
 
 measurement: pv-stats 
 
