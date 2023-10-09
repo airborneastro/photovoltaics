@@ -1,0 +1,1142 @@
+[
+    {
+        "id": "213e1ef044803d25",
+        "type": "tab",
+        "label": "Flow SMA",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "444818340485b09c",
+        "type": "change",
+        "z": "213e1ef044803d25",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "headers",
+                "pt": "msg",
+                "to": "{Content-Type: application/json\"}",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\"right\": \"usr\", \"pass\": \"<password>\"}",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 240,
+        "y": 80,
+        "wires": [
+            [
+                "068b57b1a9d6556f"
+            ]
+        ]
+    },
+    {
+        "id": "4524fdf6d53e6032",
+        "type": "inject",
+        "z": "213e1ef044803d25",
+        "name": "repeat 5sec",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 20,
+        "wires": [
+            [
+                "444818340485b09c"
+            ]
+        ]
+    },
+    {
+        "id": "068b57b1a9d6556f",
+        "type": "http request",
+        "z": "213e1ef044803d25",
+        "name": "http login",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://sma<serialno>/dyn/login.json",
+        "tls": "d50d0c9f.31e858",
+        "persist": true,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 360,
+        "y": 140,
+        "wires": [
+            [
+                "c901293f4b0ec08c"
+            ]
+        ]
+    },
+    {
+        "id": "1c6f03b753eef7f2",
+        "type": "change",
+        "z": "213e1ef044803d25",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "headers",
+                "pt": "msg",
+                "to": "{Content-Type: application/json\"}",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{}",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 250,
+        "y": 460,
+        "wires": [
+            [
+                "00dd32811113c211"
+            ]
+        ]
+    },
+    {
+        "id": "00dd32811113c211",
+        "type": "http request",
+        "z": "213e1ef044803d25",
+        "name": "http logout",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://sma<serialno>/dyn/logout.json?sid={{sid}}",
+        "tls": "d50d0c9f.31e858",
+        "persist": true,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 370,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c901293f4b0ec08c",
+        "type": "function",
+        "z": "213e1ef044803d25",
+        "name": "session ID",
+        "func": "msg.sid = msg.payload.result.sid;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 490,
+        "y": 200,
+        "wires": [
+            [
+                "f827066827ec0877",
+                "89422784b54c796d",
+                "9736a2fc01b56744"
+            ]
+        ]
+    },
+    {
+        "id": "89422784b54c796d",
+        "type": "change",
+        "z": "213e1ef044803d25",
+        "name": "defined keys",
+        "rules": [
+            {
+                "t": "set",
+                "p": "headers",
+                "pt": "msg",
+                "to": "{Content-Type: application/json\"}",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\"destDev\": [], \"keys\": [\"6100_40463600\", \"6100_40463700\", \"6100_0046C200\", \"6100_00496900\", \"6100_00496A00\", \"6100_00295A00\", \"6400_00462400\", \"6400_00462500_0\",\"6380_40451F00\",\"6380_40251E00\",\"6380_40452100\",\"6400_0046C300\",\"6400_00496700\",\"6400_00496800\"]}",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 110,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2856280ada60a97d",
+        "type": "function",
+        "z": "213e1ef044803d25",
+        "name": "Leistungswerte",
+        "func": "var meterOutW = msg.payload.result[\"01B8-xxxxx3B2\"][\"6100_40463600\"][\"9\"][0].val;\nvar meterInW = msg.payload.result[\"01B8-xxxxx3B2\"][\"6100_40463700\"][\"9\"][0].val;\nvar generatorW = msg.payload.result[\"01B8-xxxxx3B2\"][\"6100_0046C200\"][\"9\"][0].val;\nvar batchargeW = msg.payload.result[\"01B8-xxxxx3B2\"][\"6100_00496900\"][\"9\"][0].val;\nvar batdischargeW = msg.payload.result[\"01B8-xxxxx3B2\"][\"6100_00496A00\"][\"9\"][0].val;\nvar batSOC = msg.payload.result[\"01B8-xxxxx3B2\"][\"6100_00295A00\"][\"9\"][0].val;\nvar consumptW = 0;\nif (!(((meterOutW > 0) && (meterInW > 0)) || ((batdischargeW > 0) && (batchargeW > 0))))\n{\n    consumptW = generatorW + meterInW  + batdischargeW - meterOutW - batchargeW;\n}\n\nif (consumptW < 0)\n{\n   consumptW = 0; \n}\n\nmsg.payload = { meterInW, meterOutW, generatorW, batchargeW, batdischargeW, consumptW, batSOC};\nmsg.topic = \"power-stats\";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 680,
+        "y": 320,
+        "wires": [
+            [
+                "e1edfa9fc96eccbc",
+                "423f516fd94708a1",
+                "dddcda389d1ac5cb",
+                "9aec3264ca167cb5",
+                "8f055c24fbfccfb3"
+            ]
+        ]
+    },
+    {
+        "id": "e1edfa9fc96eccbc",
+        "type": "debug",
+        "z": "213e1ef044803d25",
+        "name": "debug leistung",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 680,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "423f516fd94708a1",
+        "type": "function",
+        "z": "213e1ef044803d25",
+        "name": "P Verbrauch",
+        "func": "msg.payload = msg.payload.consumptW;\nmsg.topic = \"consumptW\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 970,
+        "y": 320,
+        "wires": [
+            [
+                "b35234c906d3ca02"
+            ]
+        ]
+    },
+    {
+        "id": "314a9b1a74951121",
+        "type": "function",
+        "z": "213e1ef044803d25",
+        "name": "Einspeisezähler",
+        "func": "msg.payload = msg.payload.exportedWh;\nmsg.topic = \"exportedWh\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 980,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "de409980fdf1bfee",
+        "type": "function",
+        "z": "213e1ef044803d25",
+        "name": "Bezugszähler",
+        "func": "msg.payload = msg.payload.importedWh;\nmsg.topic = \"importedWh\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 980,
+        "y": 580,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f827066827ec0877",
+        "type": "debug",
+        "z": "213e1ef044803d25",
+        "name": "debug 4",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 660,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "971145b84bdedda6",
+        "type": "inject",
+        "z": "213e1ef044803d25",
+        "name": "manual logout",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 560,
+        "wires": [
+            [
+                "1c6f03b753eef7f2"
+            ]
+        ]
+    },
+    {
+        "id": "ba0eee38f973d84b",
+        "type": "debug",
+        "z": "213e1ef044803d25",
+        "name": "debug 5",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 540,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "09cd91f579ef1733",
+        "type": "ha-sensor",
+        "z": "213e1ef044803d25",
+        "name": "PV_erzeugung",
+        "entityConfig": "d3ef125642c94d51",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1240,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "250513e7808048c7",
+        "type": "ha-sensor",
+        "z": "213e1ef044803d25",
+        "name": "Spannung Array Sued",
+        "entityConfig": "51f101ed78c2ad8d",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1140,
+        "y": 760,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d228c0eb3b181e27",
+        "type": "function",
+        "z": "213e1ef044803d25",
+        "name": "Erzeugungszähler",
+        "func": "msg.payload = parseInt(msg.payload.generatedWh);\nmsg.topic = \"generatedWh\";\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 990,
+        "y": 620,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d2c0ee6a958014d3",
+        "type": "influxdb out",
+        "z": "213e1ef044803d25",
+        "influxdb": "1ab063217b34dd11",
+        "name": "PV-Anlage Energiewerte",
+        "measurement": "energy-stats",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "<organisation>",
+        "bucket": "PV-Anlage",
+        "x": 1010,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "d057a85bbbef112e",
+        "type": "function",
+        "z": "213e1ef044803d25",
+        "name": "Energiewerte",
+        "func": "//var priceIn = msg.payload.price\nvar exportedWh = msg.payload.result[\"01B8-xxxxx3B2\"][\"6400_00462400\"][\"9\"][0].val;\nvar importedWh = msg.payload.result[\"01B8-xxxxx3B2\"][\"6400_00462500\"][\"9\"][0].val;\nvar generatedWh = msg.payload.result[\"01B8-xxxxx3B2\"][\"6400_0046C300\"][\"9\"][0].val;\nvar batchargeWh = msg.payload.result[\"01B8-xxxxx3B2\"][\"6400_00496700\"][\"9\"][0].val;\nvar batdischargeWh = msg.payload.result[\"01B8-xxxxx3B2\"][\"6400_00496800\"][\"9\"][0].val;\nmsg.payload = { exportedWh, importedWh, generatedWh, batchargeWh, batdischargeWh};\nmsg.topic = \"energy-stats\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 580,
+        "wires": [
+            [
+                "e5b7e150925150de"
+            ]
+        ]
+    },
+    {
+        "id": "3783ad129109a062",
+        "type": "debug",
+        "z": "213e1ef044803d25",
+        "name": "debug 8",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 600,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "e5b7e150925150de",
+        "type": "change",
+        "z": "213e1ef044803d25",
+        "name": "kWh-Einkauf, Einspeisevergütung",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.priceIn",
+                "pt": "msg",
+                "to": "0.35",
+                "tot": "num"
+            },
+            {
+                "t": "set",
+                "p": "payload.priceOut",
+                "pt": "msg",
+                "to": "0.082",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 640,
+        "y": 640,
+        "wires": [
+            [
+                "3783ad129109a062",
+                "314a9b1a74951121",
+                "de409980fdf1bfee",
+                "d228c0eb3b181e27",
+                "d2c0ee6a958014d3"
+            ]
+        ]
+    },
+    {
+        "id": "dddcda389d1ac5cb",
+        "type": "function",
+        "z": "213e1ef044803d25",
+        "name": "P Erzeugung",
+        "func": "msg.payload = msg.payload.generatorW;\nmsg.topic = \"generatorW\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 970,
+        "y": 260,
+        "wires": [
+            [
+                "09cd91f579ef1733"
+            ]
+        ]
+    },
+    {
+        "id": "96bd9f6eb48dc2f2",
+        "type": "function",
+        "z": "213e1ef044803d25",
+        "name": "DC Messungen",
+        "func": "var voltageA = msg.payload.result[\"01B8-xxxxx3B2\"][\"6380_40451F00\"][\"1\"][0].val/100;\nvar voltageB = msg.payload.result[\"01B8-xxxxx3B2\"][\"6380_40451F00\"][\"1\"][1].val/100;\nvar powerA = msg.payload.result[\"01B8-xxxxx3B2\"][\"6380_40251E00\"][\"1\"][0].val;\nvar powerB = msg.payload.result[\"01B8-xxxxx3B2\"][\"6380_40251E00\"][\"1\"][1].val;\nvar currentA = msg.payload.result[\"01B8-xxxxx3B2\"][\"6380_40452100\"][\"1\"][0].val/1000;\nvar currentB = msg.payload.result[\"01B8-xxxxx3B2\"][\"6380_40452100\"][\"1\"][1].val/1000;\nvar reactiveP_L1 = msg.payload.result[\"01B8-xxxxx3B2\"][\"6100_40466C00\"][\"9\"][0].val;\nmsg.payload = { voltageA, voltageB, powerA, powerB, currentA, currentB, reactiveP_L1};\nmsg.topic = \"PV_stats\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 760,
+        "wires": [
+            [
+                "76d17e15d627c0e9",
+                "c1cba41dbc5af5c4",
+                "c218ab25d6cb7d2f",
+                "d86df43339f674cf",
+                "143d65de2a994afa",
+                "b90e569df56590cd"
+            ]
+        ]
+    },
+    {
+        "id": "76d17e15d627c0e9",
+        "type": "debug",
+        "z": "213e1ef044803d25",
+        "name": "debug 10",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 840,
+        "y": 980,
+        "wires": []
+    },
+    {
+        "id": "c1cba41dbc5af5c4",
+        "type": "function",
+        "z": "213e1ef044803d25",
+        "name": "VoltageA",
+        "func": "msg.payload = msg.payload.voltageA\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 840,
+        "y": 760,
+        "wires": [
+            [
+                "250513e7808048c7"
+            ]
+        ]
+    },
+    {
+        "id": "b35234c906d3ca02",
+        "type": "ha-sensor",
+        "z": "213e1ef044803d25",
+        "name": "Verbrauch",
+        "entityConfig": "59a83d68712dc87c",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1230,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9aec3264ca167cb5",
+        "type": "function",
+        "z": "213e1ef044803d25",
+        "name": "Eigenverbrauchsquote",
+        "func": "msg.payload = ((msg.payload.generatorW -  msg.payload.meterOutW)/msg.payload.consumptW*100).toFixed(0) +\"%\"\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1000,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c218ab25d6cb7d2f",
+        "type": "function",
+        "z": "213e1ef044803d25",
+        "name": "VoltageB",
+        "func": "msg.payload = msg.payload.voltageB\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 840,
+        "y": 820,
+        "wires": [
+            [
+                "28d2b9a7267d4071"
+            ]
+        ]
+    },
+    {
+        "id": "28d2b9a7267d4071",
+        "type": "ha-sensor",
+        "z": "213e1ef044803d25",
+        "name": "Spannung Array Ost",
+        "entityConfig": "446ef4897ddbd86a",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1140,
+        "y": 820,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d86df43339f674cf",
+        "type": "function",
+        "z": "213e1ef044803d25",
+        "name": "PowerA",
+        "func": "msg.payload = msg.payload.powerA\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 840,
+        "y": 880,
+        "wires": [
+            [
+                "fe5a37c8d932c86b"
+            ]
+        ]
+    },
+    {
+        "id": "fe5a37c8d932c86b",
+        "type": "ha-sensor",
+        "z": "213e1ef044803d25",
+        "name": "Power Array Süd",
+        "entityConfig": "c9d027335b1529fd",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1130,
+        "y": 880,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "143d65de2a994afa",
+        "type": "function",
+        "z": "213e1ef044803d25",
+        "name": "PowerB",
+        "func": "msg.payload = msg.payload.powerB\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 840,
+        "y": 920,
+        "wires": [
+            [
+                "58d27b8f704a4368"
+            ]
+        ]
+    },
+    {
+        "id": "58d27b8f704a4368",
+        "type": "ha-sensor",
+        "z": "213e1ef044803d25",
+        "name": "Power Array Ost",
+        "entityConfig": "1176130d62599dcc",
+        "version": 0,
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1120,
+        "y": 940,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8f055c24fbfccfb3",
+        "type": "influxdb out",
+        "z": "213e1ef044803d25",
+        "influxdb": "1ab063217b34dd11",
+        "name": "PV_Anlage Leistungs",
+        "measurement": "power-stats",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "<organisation>",
+        "bucket": "PV-Anlage",
+        "x": 1000,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "b90e569df56590cd",
+        "type": "influxdb out",
+        "z": "213e1ef044803d25",
+        "influxdb": "1ab063217b34dd11",
+        "name": "PV-Anlage DC-Messungen",
+        "measurement": "pv-stats",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "<organisation>",
+        "bucket": "PV-Anlage",
+        "x": 900,
+        "y": 1040,
+        "wires": []
+    },
+    {
+        "id": "9736a2fc01b56744",
+        "type": "change",
+        "z": "213e1ef044803d25",
+        "name": "All keys",
+        "rules": [
+            {
+                "t": "set",
+                "p": "headers",
+                "pt": "msg",
+                "to": "{Content-Type: application/json\"}",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\"destDev\": []}",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 140,
+        "y": 380,
+        "wires": [
+            [
+                "6f8c3274bc9917ad"
+            ]
+        ]
+    },
+    {
+        "id": "5a8e4c2e6a21bd4e",
+        "type": "http request",
+        "z": "213e1ef044803d25",
+        "name": "http defined keys",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://sma<serialno>/dyn/getValues.json?sid={{sid}}",
+        "tls": "d50d0c9f.31e858",
+        "persist": true,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 290,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6f8c3274bc9917ad",
+        "type": "http request",
+        "z": "213e1ef044803d25",
+        "name": "http all keys",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://sma<serialno>/dyn/getAllOnlValues.json?sid={{sid}}",
+        "tls": "d50d0c9f.31e858",
+        "persist": true,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 350,
+        "y": 380,
+        "wires": [
+            [
+                "2856280ada60a97d",
+                "ba0eee38f973d84b",
+                "1c6f03b753eef7f2",
+                "d057a85bbbef112e",
+                "96bd9f6eb48dc2f2"
+            ]
+        ]
+    },
+    {
+        "id": "d50d0c9f.31e858",
+        "type": "tls-config",
+        "name": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "",
+        "keyname": "",
+        "caname": "",
+        "servername": "",
+        "verifyservercert": false
+    },
+    {
+        "id": "d3ef125642c94d51",
+        "type": "ha-entity-config",
+        "server": "73f91ee1819febd9",
+        "deviceConfig": "",
+        "name": "Sensor config PV power",
+        "version": "6",
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "PVLeistung"
+            },
+            {
+                "property": "icon",
+                "value": "mdi:gauge"
+            },
+            {
+                "property": "entity_category",
+                "value": "config"
+            },
+            {
+                "property": "entity_picture",
+                "value": ""
+            },
+            {
+                "property": "device_class",
+                "value": "power"
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "W"
+            },
+            {
+                "property": "state_class",
+                "value": "measurement"
+            }
+        ],
+        "resend": true,
+        "debugEnabled": false
+    },
+    {
+        "id": "51f101ed78c2ad8d",
+        "type": "ha-entity-config",
+        "server": "73f91ee1819febd9",
+        "deviceConfig": "",
+        "name": "Sensor config VoltageA",
+        "version": "6",
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "Voltage_A"
+            },
+            {
+                "property": "icon",
+                "value": "mdi:gauge"
+            },
+            {
+                "property": "entity_category",
+                "value": "config"
+            },
+            {
+                "property": "entity_picture",
+                "value": ""
+            },
+            {
+                "property": "device_class",
+                "value": "voltage"
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "V"
+            },
+            {
+                "property": "state_class",
+                "value": "measurement"
+            }
+        ],
+        "resend": false,
+        "debugEnabled": false
+    },
+    {
+        "id": "1ab063217b34dd11",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "database",
+        "name": "Influxdb2_PV",
+        "usetls": false,
+        "tls": "d50d0c9f.31e858",
+        "influxdbVersion": "2.0",
+        "url": "http://192.168.X.X:8086",
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "59a83d68712dc87c",
+        "type": "ha-entity-config",
+        "server": "73f91ee1819febd9",
+        "deviceConfig": "",
+        "name": "Sensor config Verbrauch",
+        "version": "6",
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "Hausverbrauch"
+            },
+            {
+                "property": "icon",
+                "value": "mdi:gauge"
+            },
+            {
+                "property": "entity_category",
+                "value": "config"
+            },
+            {
+                "property": "entity_picture",
+                "value": ""
+            },
+            {
+                "property": "device_class",
+                "value": "power"
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "W"
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            }
+        ],
+        "resend": false,
+        "debugEnabled": false
+    },
+    {
+        "id": "446ef4897ddbd86a",
+        "type": "ha-entity-config",
+        "server": "73f91ee1819febd9",
+        "deviceConfig": "",
+        "name": "Sensor config Voltage B",
+        "version": "6",
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "Spannung Array Ost"
+            },
+            {
+                "property": "icon",
+                "value": "mdi:gauge"
+            },
+            {
+                "property": "entity_category",
+                "value": "config"
+            },
+            {
+                "property": "entity_picture",
+                "value": ""
+            },
+            {
+                "property": "device_class",
+                "value": "voltage"
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "V"
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            }
+        ],
+        "resend": false,
+        "debugEnabled": false
+    },
+    {
+        "id": "c9d027335b1529fd",
+        "type": "ha-entity-config",
+        "server": "73f91ee1819febd9",
+        "deviceConfig": "",
+        "name": "Power Array Süd",
+        "version": "6",
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "Power Array Süd"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "entity_category",
+                "value": "config"
+            },
+            {
+                "property": "entity_picture",
+                "value": ""
+            },
+            {
+                "property": "device_class",
+                "value": "power"
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "W"
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            }
+        ],
+        "resend": false,
+        "debugEnabled": false
+    },
+    {
+        "id": "1176130d62599dcc",
+        "type": "ha-entity-config",
+        "server": "73f91ee1819febd9",
+        "deviceConfig": "",
+        "name": "Power Array Ost",
+        "version": "6",
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "Power array Ost"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "entity_category",
+                "value": "config"
+            },
+            {
+                "property": "entity_picture",
+                "value": ""
+            },
+            {
+                "property": "device_class",
+                "value": "power"
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "W"
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            }
+        ],
+        "resend": false,
+        "debugEnabled": false
+    },
+    {
+        "id": "73f91ee1819febd9",
+        "type": "server",
+        "name": "Home Assistant",
+        "version": 5,
+        "addon": false,
+        "rejectUnauthorizedCerts": true,
+        "ha_boolean": "y|yes|true|on|home|open",
+        "connectionDelay": true,
+        "cacheJson": true,
+        "heartbeat": false,
+        "heartbeatInterval": "30",
+        "areaSelector": "friendlyName",
+        "deviceSelector": "friendlyName",
+        "entitySelector": "friendlyName",
+        "statusSeparator": ": ",
+        "statusYear": "hidden",
+        "statusMonth": "short",
+        "statusDay": "numeric",
+        "statusHourCycle": "default",
+        "statusTimeFormat": "h:m",
+        "enableGlobalContextStore": false
+    }
+]
