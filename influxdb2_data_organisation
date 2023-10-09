@@ -1,0 +1,30 @@
+influxdb2 data organisation (partially adapted from 
+https://haus-automatisierung.com/software/2023/05/11/influxdb2-pv-dashboard.html)
+
+measurement power-stats (unit: Watt)
+
+meterInW        Leistung Bezug              imported power
+meterOutW       Leistung Einspeisung        exported power
+generatorW      Leistung PV-Erzeugung       generated power
+batchargeW      Leistung Batterieladung     battery charging power
+batdischargeW   Leistung Batterieentladung  battery discharge power
+consumptW = generatorW + meterInW  + batdischargeW - meterOutW - batchargeW
+                Hausverbrauch               consumed power
+                
+measurement energy-stats (unit: Wh)
+
+importedWh      Energie Bezug               imported energy
+exportedWh      Energie Einspeisung         exported energy
+generatedWh     Energie Erzeugung           generated energy
+batchargeWh     Energie Batterieladung      battery charged energy
+batdischargeWh  Energie Batterieentladung   battery discharged energy
+batSOC (unit %) Batterie Ladezustand (%)    battery state of charge (%)
+
+measurement: pv-stats 
+
+voltageA        DC-Spannung string A (V)    DC voltage string A (V)
+voltageB        DC-Spannung string B (V)    DC voltage string B (V)
+currentA        DC-Strom string A (A)       DC current string A (A)
+currentB        DC-Strom string B (A)       DC current string B (A)
+powerA          DC-power string A (W)       DC power string A (W)
+powerB          DC-power string B (W)       DC power string B (W)
