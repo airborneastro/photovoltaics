@@ -1,7 +1,7 @@
 ﻿# photovoltaics
 **SMA inverter readout + InfluxDB v2.6.1 + Grafana v9.4.7**
 
- The  [node-RED flow](https://github.com/airborneastro/photovoltaics/blob/main/Flow_SMA_v03_anonymous.json) extracts information from the web interface of an SMA Tripower Smart Energy hybrid inverter in combination with an SMA Sunny Home Manager (SHM) as the energy meter. Essentially, the flow makes three http requests in sequence every 5 seconds: 
+ The  [node-RED flow](https://github.com/airborneastro/photovoltaics/blob/main/Flow_SMA_v03_anonymous.json) (adapted from [mkgeiger](https://github.com/mkgeiger/node-red-sma) ) extracts information from the web interface of an SMA Tripower Smart Energy hybrid inverter in combination with an SMA Sunny Home Manager (SHM) as the energy meter. Essentially, the flow makes three http requests in sequence every 5 seconds: 
 
  1. login and retrieve a session id (sid)
  2. using the sid, extract a json string with inverter information
