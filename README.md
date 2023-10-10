@@ -32,7 +32,7 @@ The organisation of the database with its buckets, measurements and fields as us
 
 The data is visualized in a Grafana dashboard adapted from "JSAnyone" on
 https://www.photovoltaikforum.com/thread/150542-umfangreiches-logging-mit-grafana-anleitung/
-The queries for the grafana panels are written in the "flux" language for influxdb2, partially adapted from Matthias Kleine (see above). The dashboard json file is "SMA Smart Energy10.0-1696871662047.json"
+The queries for the grafana panels are written in the "flux" language for influxdb2, partially adapted from Matthias Kleine (see above). The dashboard json file is "SMA Smart Energy10.0-1696871662047.json" To show the sun elevation angle, you need to install the [sun and moon plugin](https://grafana.com/grafana/plugins/fetzerch-sunandmoon-datasource/).
 
 All is "work in progress". The project runs in docker containers for node-RED, influxdb2, grafana and homeassistant using a Raspberry Pi 4 (4GB).
 
