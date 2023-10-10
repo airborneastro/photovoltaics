@@ -1,6 +1,8 @@
 influxdb2 data organisation (partially adapted from 
 https://haus-automatisierung.com/software/2023/05/11/influxdb2-pv-dashboard.html)
 
+bucket PV-Anlage
+
 measurement power-stats (unit: Watt)
 
 meterInW        Leistung Bezug              imported power
