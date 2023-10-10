@@ -18,7 +18,7 @@ With the sid, ask for all available data with:
 
     curl -X POST https://sma<serialnumber>/dyn/getAllOnlValues.json?sid=A53TnUC-0MQ-dWCA -k -H 'Content-Type: application/json' -d '{"destDev": []}'
     
-The result is a (long) json string with the data as key: value pairs that can be extracted by parsing the json string. The file "valueID_STP10_SE.xlsx" contains all keys with their parameter descriptions that I found out by analyzing the web interface with the developer tools of a Firefox browser. The third step is to logout from the web interface with:
+The result is a (long) json string with the data as key: value pairs that can be extracted by parsing the json string. [This file](https://github.com/airborneastro/photovoltaics/blob/main/valueID_STP10_SE.xlsx)  contains all keys with their parameter descriptions that I found out by analyzing the web interface with the developer tools of a Firefox browser. The third step is to logout from the web interface with:
 
     curl -X POST https://sma<serialnumber>/dyn/logout.json?sid=A53TnUC-0MQ-dWCA -k -H 'Content-Type:application/json' -d '{}'
 
