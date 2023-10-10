@@ -35,6 +35,9 @@ The queries for the grafana panels are written in the "flux" language for influx
 
 All is "work in progress". The project runs in docker containers for node-RED, influxdb2, grafana and homeassistant using a Raspberry Pi 4 (4GB).
 
+![Dashboard](https://github.com/airborneastro/photovoltaics/blob/main/Grafana_SMA_STP_SE10_part1.PNG)
+
+
 
 
 
