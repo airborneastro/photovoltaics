@@ -27,7 +27,8 @@ The node-RED flow then sends the requested data into an influxdb2 database. The 
 influxdb2 data organisation adapted from Matthias Kleine in
 https://haus-automatisierung.com/software/2023/05/11/influxdb2-pv-dashboard.html
 
-The organisation of the database with its buckets, measurements and fields as used in the following grafana dashboard is described in "influxdb2_data_organisation"
+The organisation of the database with its buckets, measurements and fields as used in the following grafana dashboard is described in 
+[influxdb2_data_organisation](https://github.com/airborneastro/photovoltaics/blob/main/influxdb2_data_organisation)
 
 The data is visualized in a Grafana dashboard adapted from "JSAnyone" on
 https://www.photovoltaikforum.com/thread/150542-umfangreiches-logging-mit-grafana-anleitung/
