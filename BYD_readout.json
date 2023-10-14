@@ -1,0 +1,1233 @@
+[
+    {
+        "id": "82c27bbba924f8af",
+        "type": "tab",
+        "label": "Flow 6",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "c1bf54aba015a59c",
+        "type": "function",
+        "z": "82c27bbba924f8af",
+        "name": "packet 1",
+        "func": "msg.payload = Buffer.from(\"01030500001984cc\", \"hex\");\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 140,
+        "wires": [
+            [
+                "dff508b083adf076"
+            ]
+        ]
+    },
+    {
+        "id": "dff508b083adf076",
+        "type": "tcp request",
+        "z": "82c27bbba924f8af",
+        "name": "BYD Battery",
+        "server": "192.168.1.82",
+        "port": "8080",
+        "out": "time",
+        "ret": "buffer",
+        "splitc": "1000",
+        "newline": "",
+        "trim": false,
+        "tls": "",
+        "x": 470,
+        "y": 140,
+        "wires": [
+            [
+                "73faaa497ab29bb4",
+                "bdc2393d72ae0913"
+            ]
+        ]
+    },
+    {
+        "id": "73faaa497ab29bb4",
+        "type": "buffer-parser",
+        "z": "82c27bbba924f8af",
+        "name": "parse P1",
+        "data": "payload",
+        "dataType": "msg",
+        "specification": "spec",
+        "specificationType": "ui",
+        "items": [
+            {
+                "type": "int16be",
+                "name": "hvsSOC",
+                "offset": 3,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "int16be",
+                "name": "hvsMaxVolt",
+                "offset": 5,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "0.01",
+                "mask": ""
+            },
+            {
+                "type": "int16be",
+                "name": "hvsMinVolt",
+                "offset": 7,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "0.01",
+                "mask": ""
+            },
+            {
+                "type": "int16be",
+                "name": "hvsSOH",
+                "offset": 9,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "int16be",
+                "name": "hvsCurrent",
+                "offset": 11,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "0.100",
+                "mask": ""
+            },
+            {
+                "type": "int16be",
+                "name": "hvsBattVolt",
+                "offset": 13,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "0.01",
+                "mask": ""
+            },
+            {
+                "type": "int16be",
+                "name": "hvsMaxTemp",
+                "offset": 15,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "int16be",
+                "name": "hvsMinTemp",
+                "offset": 17,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "int16be",
+                "name": "hvsBatTemp",
+                "offset": 19,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "int16be",
+                "name": "hvsError",
+                "offset": 29,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "string",
+                "name": "hvsParamT",
+                "offset": 31,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "0.01",
+                "mask": ""
+            },
+            {
+                "type": "int16be",
+                "name": "hvsOutVolt",
+                "offset": 35,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "0.01",
+                "mask": ""
+            }
+        ],
+        "swap1": "",
+        "swap2": "",
+        "swap3": "",
+        "swap1Type": "swap",
+        "swap2Type": "swap",
+        "swap3Type": "swap",
+        "msgProperty": "payload",
+        "msgPropertyType": "str",
+        "resultType": "keyvalue",
+        "resultTypeType": "return",
+        "multipleResult": false,
+        "fanOutMultipleResult": false,
+        "setTopic": true,
+        "outputs": 1,
+        "x": 660,
+        "y": 140,
+        "wires": [
+            [
+                "98b2fd36fec341e1"
+            ]
+        ]
+    },
+    {
+        "id": "98b2fd36fec341e1",
+        "type": "function",
+        "z": "82c27bbba924f8af",
+        "name": "process P1",
+        "func": "msg.payload.hvsPower = Math.round((msg.payload.hvsCurrent * msg.payload.hvsOutVolt)* 100) / 100.0;\nmsg.payload.hvsDiffVolt = Math.round((msg.payload.hvsMaxVolt - msg.payload.hvsMinVolt) * 100) / 100;\nmsg.payload.hvsCurrent = (Math.round(msg.payload.hvsCurrent  * 100) / 100.0);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 140,
+        "wires": [
+            [
+                "e98905333cf9357f"
+            ]
+        ]
+    },
+    {
+        "id": "e98905333cf9357f",
+        "type": "debug",
+        "z": "82c27bbba924f8af",
+        "name": "debug 14",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1000,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "9498d319785b66ef",
+        "type": "inject",
+        "z": "82c27bbba924f8af",
+        "name": "General Batt info",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 60,
+        "wires": [
+            [
+                "88919198f87fa0b3"
+            ]
+        ]
+    },
+    {
+        "id": "88919198f87fa0b3",
+        "type": "function",
+        "z": "82c27bbba924f8af",
+        "name": "packet 0",
+        "func": "msg.payload = Buffer.from(\"010300000066c5e0\", \"hex\");\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 60,
+        "wires": [
+            [
+                "84f97cc19e86d7ea"
+            ]
+        ]
+    },
+    {
+        "id": "6ddfbf8d464ec2a0",
+        "type": "buffer-parser",
+        "z": "82c27bbba924f8af",
+        "name": "parse P0",
+        "data": "payload",
+        "dataType": "msg",
+        "specification": "spec",
+        "specificationType": "ui",
+        "items": [
+            {
+                "type": "string",
+                "name": "SerialNo",
+                "offset": 3,
+                "length": 19,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "uint8",
+                "name": "hvsBattType_fromSerial",
+                "offset": 5,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "uint8",
+                "name": "hvsBMUA_u",
+                "offset": 27,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "uint8",
+                "name": "hvsBMUA_l",
+                "offset": 28,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "uint8",
+                "name": "hvsBMUB_u",
+                "offset": 29,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "uint8",
+                "name": "hvsBMUB_l",
+                "offset": 30,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "uint8",
+                "name": "hvsBMS_u",
+                "offset": 31,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "uint8",
+                "name": "hvsBMS_l",
+                "offset": 32,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "uint8",
+                "name": "hvsModules",
+                "offset": 36,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "uint8",
+                "name": "hvsGrid",
+                "offset": 38,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            }
+        ],
+        "swap1": "",
+        "swap2": "",
+        "swap3": "",
+        "swap1Type": "swap",
+        "swap2Type": "swap",
+        "swap3Type": "swap",
+        "msgProperty": "payload",
+        "msgPropertyType": "str",
+        "resultType": "keyvalue",
+        "resultTypeType": "return",
+        "multipleResult": false,
+        "fanOutMultipleResult": false,
+        "setTopic": true,
+        "outputs": 1,
+        "x": 660,
+        "y": 60,
+        "wires": [
+            [
+                "711d755660a625ab"
+            ]
+        ]
+    },
+    {
+        "id": "84f97cc19e86d7ea",
+        "type": "tcp request",
+        "z": "82c27bbba924f8af",
+        "name": "BYD Battery",
+        "server": "192.168.1.82",
+        "port": "8080",
+        "out": "time",
+        "ret": "buffer",
+        "splitc": "1000",
+        "newline": "",
+        "trim": false,
+        "tls": "",
+        "x": 470,
+        "y": 60,
+        "wires": [
+            [
+                "6ddfbf8d464ec2a0",
+                "c1bf54aba015a59c"
+            ]
+        ]
+    },
+    {
+        "id": "f74706ec709b68d7",
+        "type": "debug",
+        "z": "82c27bbba924f8af",
+        "name": "debug 15",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1000,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "711d755660a625ab",
+        "type": "function",
+        "z": "82c27bbba924f8af",
+        "name": "process P0",
+        "func": "msg.payload.hvsBMUA = \"V\" + msg.payload.hvsBMUA_u.toString() + \".\" + msg.payload.hvsBMUA_l.toString();\nmsg.payload.hvsBMUB = \"V\" + msg.payload.hvsBMUB_u.toString() + \".\" + msg.payload.hvsBMUB_l.toString();\nmsg.payload.hvsBMS = \"V\" + msg.payload.hvsBMS_u.toString() + \".\" + msg.payload.hvsBMS_l.toString(); \nmsg.payload.hvsModules = (msg.payload.hvsModules -16);\nflow.set(\"hvsModules\", msg.payload.hvsModules);\nswitch  (msg.payload.hvsGrid)\n{\n    case 0:\n        msg.payload.hvsGrid = \"OffGrid\"\n        break;\n    case 1:\n        msg.payload.hvsGrid = \"OnGrid\"\n        break;\n    case 2:\n        msg.payload.hvsGrid = \"OffGrid\"\n}\nflow.set(\"hvsBattType_fromSerial\", msg.payload.hvsBattType_fromSerial);\n \nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 60,
+        "wires": [
+            [
+                "f74706ec709b68d7"
+            ]
+        ]
+    },
+    {
+        "id": "1d481640e8640cc0",
+        "type": "function",
+        "z": "82c27bbba924f8af",
+        "name": "packet 5",
+        "func": "msg.payload = Buffer.from(\"01030558004104e5\", \"hex\");\n//msg.payload = Buffer.from(\"0110055000020400018100f853\", \"hex\");\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 440,
+        "wires": [
+            [
+                "7cb3cff9e167e039"
+            ]
+        ]
+    },
+    {
+        "id": "7cb3cff9e167e039",
+        "type": "tcp request",
+        "z": "82c27bbba924f8af",
+        "name": "BYD Battery",
+        "server": "192.168.1.82",
+        "port": "8080",
+        "out": "time",
+        "ret": "buffer",
+        "splitc": "1000",
+        "newline": "",
+        "trim": false,
+        "tls": "",
+        "x": 470,
+        "y": 440,
+        "wires": [
+            [
+                "44e44acc783bb4c5",
+                "8acd9b92b488f664"
+            ]
+        ]
+    },
+    {
+        "id": "0a9f875b9769ce4b",
+        "type": "function",
+        "z": "82c27bbba924f8af",
+        "name": "packet 4",
+        "func": "msg.payload = Buffer.from(\"010305510001d517\", \"hex\");\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 380,
+        "wires": [
+            [
+                "e76d1996868897fe"
+            ]
+        ]
+    },
+    {
+        "id": "e76d1996868897fe",
+        "type": "tcp request",
+        "z": "82c27bbba924f8af",
+        "name": "BYD Battery",
+        "server": "192.168.1.82",
+        "port": "8080",
+        "out": "time",
+        "ret": "buffer",
+        "splitc": "8000",
+        "newline": "",
+        "trim": false,
+        "tls": "",
+        "x": 470,
+        "y": 380,
+        "wires": [
+            [
+                "1d481640e8640cc0"
+            ]
+        ]
+    },
+    {
+        "id": "d3e243abacb391a0",
+        "type": "inject",
+        "z": "82c27bbba924f8af",
+        "name": "Cells info",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 320,
+        "wires": [
+            [
+                "06072ae38d2a5c80"
+            ]
+        ]
+    },
+    {
+        "id": "06072ae38d2a5c80",
+        "type": "function",
+        "z": "82c27bbba924f8af",
+        "name": "packet 3",
+        "func": "msg.payload = Buffer.from(\"0110055000020400018100f853\", \"hex\");\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 320,
+        "wires": [
+            [
+                "e2a1fe601f4a4345"
+            ]
+        ]
+    },
+    {
+        "id": "e2a1fe601f4a4345",
+        "type": "tcp request",
+        "z": "82c27bbba924f8af",
+        "name": "BYD Battery",
+        "server": "192.168.1.82",
+        "port": "8080",
+        "out": "time",
+        "ret": "buffer",
+        "splitc": "1000",
+        "newline": "",
+        "trim": false,
+        "tls": "",
+        "x": 470,
+        "y": 320,
+        "wires": [
+            [
+                "0a9f875b9769ce4b"
+            ]
+        ]
+    },
+    {
+        "id": "44e44acc783bb4c5",
+        "type": "buffer-parser",
+        "z": "82c27bbba924f8af",
+        "name": "parse P5",
+        "data": "payload",
+        "dataType": "msg",
+        "specification": "spec",
+        "specificationType": "ui",
+        "items": [
+            {
+                "type": "int16be",
+                "name": "hvsMaxmVolt",
+                "offset": 5,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "int16be",
+                "name": "hvsMinmVolt",
+                "offset": 7,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "uint8",
+                "name": "hvsMaxmVoltCell",
+                "offset": 9,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "uint8",
+                "name": "hvsMinmVoltCell",
+                "offset": 10,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "uint8",
+                "name": "hvsMaxTempCell",
+                "offset": 15,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "uint8",
+                "name": "hvsMinTempCell",
+                "offset": 16,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "int16be",
+                "name": "hvsSOCDiagnosis",
+                "offset": 53,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "0.1",
+                "mask": ""
+            },
+            {
+                "type": "buffer",
+                "name": "data_volt",
+                "offset": 101,
+                "length": 32,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            }
+        ],
+        "swap1": "",
+        "swap2": "",
+        "swap3": "",
+        "swap1Type": "swap",
+        "swap2Type": "swap",
+        "swap3Type": "swap",
+        "msgProperty": "payload",
+        "msgPropertyType": "str",
+        "resultType": "keyvalue",
+        "resultTypeType": "return",
+        "multipleResult": false,
+        "fanOutMultipleResult": false,
+        "setTopic": true,
+        "outputs": 1,
+        "x": 660,
+        "y": 440,
+        "wires": [
+            [
+                "eb12f357e462128e"
+            ]
+        ]
+    },
+    {
+        "id": "8c87e81202a82f2d",
+        "type": "debug",
+        "z": "82c27bbba924f8af",
+        "name": "debug 21",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1000,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "eb12f357e462128e",
+        "type": "function",
+        "z": "82c27bbba924f8af",
+        "name": "process P5",
+        "func": "var buffer = Buffer.from(msg.payload.data_volt)\nvar hvsBatteryVoltsperCell = [];\nconst MaxCells = 16;\nfor (let i = 0; i < MaxCells; i++)\n{\n   hvsBatteryVoltsperCell[i] = ((buffer[i*2]*256 + buffer[i*2+1])/1000.0);\n}\nmsg.payload = {hvsBatteryVoltsperCell};\nflow.set(\"hvsBatteryVoltsperCell\", hvsBatteryVoltsperCell);\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 440,
+        "wires": [
+            [
+                "8c87e81202a82f2d"
+            ]
+        ]
+    },
+    {
+        "id": "bdc2393d72ae0913",
+        "type": "function",
+        "z": "82c27bbba924f8af",
+        "name": "packet 2",
+        "func": "msg.payload = Buffer.from(\"010300100003040e\", \"hex\");\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 220,
+        "wires": [
+            [
+                "e2b212df0636c8aa"
+            ]
+        ]
+    },
+    {
+        "id": "e2b212df0636c8aa",
+        "type": "tcp request",
+        "z": "82c27bbba924f8af",
+        "name": "BYD Battery",
+        "server": "192.168.1.82",
+        "port": "8080",
+        "out": "time",
+        "ret": "buffer",
+        "splitc": "1000",
+        "newline": "",
+        "trim": false,
+        "tls": "",
+        "x": 470,
+        "y": 220,
+        "wires": [
+            [
+                "1d668c13834f5bef"
+            ]
+        ]
+    },
+    {
+        "id": "1d668c13834f5bef",
+        "type": "buffer-parser",
+        "z": "82c27bbba924f8af",
+        "name": "parse P2",
+        "data": "payload",
+        "dataType": "msg",
+        "specification": "spec",
+        "specificationType": "ui",
+        "items": [
+            {
+                "type": "uint8",
+                "name": "hvsInvType",
+                "offset": 3,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "uint8",
+                "name": "hvsBattType",
+                "offset": 5,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            }
+        ],
+        "swap1": "",
+        "swap2": "",
+        "swap3": "",
+        "swap1Type": "swap",
+        "swap2Type": "swap",
+        "swap3Type": "swap",
+        "msgProperty": "payload",
+        "msgPropertyType": "str",
+        "resultType": "keyvalue",
+        "resultTypeType": "return",
+        "multipleResult": false,
+        "fanOutMultipleResult": false,
+        "setTopic": true,
+        "outputs": 1,
+        "x": 660,
+        "y": 220,
+        "wires": [
+            [
+                "6895aebc3bec5ac5"
+            ]
+        ]
+    },
+    {
+        "id": "6c1fe81bd54cbe09",
+        "type": "debug",
+        "z": "82c27bbba924f8af",
+        "name": "debug 22",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1000,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "6895aebc3bec5ac5",
+        "type": "function",
+        "z": "82c27bbba924f8af",
+        "name": "process P2",
+        "func": "var NumCells = 0;\nvar NumTemps = 0;\nswitch (msg.payload.hvsBattType) {\n    case 0:\n        break;\n    case 1: //HVM 16 Cells per module\n        NumCells = flow.get(\"hvsModules\") * 16;\n        NumTemps = flow.get(\"hvsModules\") * 8\n        break;\n    case 2: //HVS 32 cells per module\n        NumCells = flow.get(\"hvsModules\") * 32;\n        NumTemps = flow.get(\"hvsModules\") * 12;\n}  \nif ((flow.get(\"hvsBattType_fromSerial\") === 49) || (flow.get(\"hvsBattType_fromSerial\") === 50))\n    {NumCells = flow.get(\"hvsModules\") * 7;\n     NumTemps = 0}\nif (NumCells > 160) {NumCells = 160};\nif (NumTemps > 64) {NumTemps = 64\n}\nflow.set(\"hvsNumCells\",NumCells)\nflow.set(\"hvsNumTemps\",NumTemps)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 220,
+        "wires": [
+            [
+                "6c1fe81bd54cbe09"
+            ]
+        ]
+    },
+    {
+        "id": "8acd9b92b488f664",
+        "type": "function",
+        "z": "82c27bbba924f8af",
+        "name": "packet 6",
+        "func": "msg.payload = Buffer.from(\"01030558004104e5\", \"hex\");\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 500,
+        "wires": [
+            [
+                "ab919006df0f72ce"
+            ]
+        ]
+    },
+    {
+        "id": "ab919006df0f72ce",
+        "type": "tcp request",
+        "z": "82c27bbba924f8af",
+        "name": "BYD Battery",
+        "server": "192.168.1.82",
+        "port": "8080",
+        "out": "time",
+        "ret": "buffer",
+        "splitc": "1000",
+        "newline": "",
+        "trim": false,
+        "tls": "",
+        "x": 470,
+        "y": 500,
+        "wires": [
+            [
+                "7d6724f442bbc926",
+                "e7bdfaac86ba5bec"
+            ]
+        ]
+    },
+    {
+        "id": "7d6724f442bbc926",
+        "type": "buffer-parser",
+        "z": "82c27bbba924f8af",
+        "name": "parse P6",
+        "data": "payload",
+        "dataType": "msg",
+        "specification": "spec",
+        "specificationType": "ui",
+        "items": [
+            {
+                "type": "buffer",
+                "name": "data_volt",
+                "offset": 5,
+                "length": -1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            }
+        ],
+        "swap1": "",
+        "swap2": "",
+        "swap3": "",
+        "swap1Type": "swap",
+        "swap2Type": "swap",
+        "swap3Type": "swap",
+        "msgProperty": "payload",
+        "msgPropertyType": "str",
+        "resultType": "keyvalue",
+        "resultTypeType": "return",
+        "multipleResult": false,
+        "fanOutMultipleResult": false,
+        "setTopic": true,
+        "outputs": 1,
+        "x": 660,
+        "y": 500,
+        "wires": [
+            [
+                "2e3cac6546d4cd0a"
+            ]
+        ]
+    },
+    {
+        "id": "2e3cac6546d4cd0a",
+        "type": "function",
+        "z": "82c27bbba924f8af",
+        "name": "process P6",
+        "func": "var buffer = Buffer.from(msg.payload.data_volt)\nvar hvsBatteryVoltsperCell = [];\nhvsBatteryVoltsperCell = flow.get(\"hvsBatteryVoltsperCell\");\nvar MaxCells = flow.get(\"hvsNumCells\") - 16;\nif (MaxCells > 64) { MaxCells = 64; }\nfor (let i = 0; i < MaxCells; i++)\n{\n   hvsBatteryVoltsperCell[i+16] = ((buffer[i*2]*256 + buffer[i*2+1])/1000.0);\n\n}\nmsg.payload = {hvsBatteryVoltsperCell};\nflow.set(\"hvsBatteryVoltsperCell\", hvsBatteryVoltsperCell);\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 500,
+        "wires": [
+            [
+                "e22cc9dc4789878c"
+            ]
+        ]
+    },
+    {
+        "id": "e22cc9dc4789878c",
+        "type": "debug",
+        "z": "82c27bbba924f8af",
+        "name": "debug 24",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1000,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "e7bdfaac86ba5bec",
+        "type": "function",
+        "z": "82c27bbba924f8af",
+        "name": "packet 7",
+        "func": "msg.payload = Buffer.from(\"01030558004104e5\", \"hex\");\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 580,
+        "wires": [
+            [
+                "221f4686a5bc4096"
+            ]
+        ]
+    },
+    {
+        "id": "221f4686a5bc4096",
+        "type": "tcp request",
+        "z": "82c27bbba924f8af",
+        "name": "BYD Battery",
+        "server": "192.168.1.82",
+        "port": "8080",
+        "out": "time",
+        "ret": "buffer",
+        "splitc": "1000",
+        "newline": "",
+        "trim": false,
+        "tls": "",
+        "x": 470,
+        "y": 580,
+        "wires": [
+            [
+                "a9354e6ad9a7211d",
+                "323554b6efed8c17"
+            ]
+        ]
+    },
+    {
+        "id": "a9354e6ad9a7211d",
+        "type": "buffer-parser",
+        "z": "82c27bbba924f8af",
+        "name": "parse P7",
+        "data": "payload",
+        "dataType": "msg",
+        "specification": "spec",
+        "specificationType": "ui",
+        "items": [
+            {
+                "type": "buffer",
+                "name": "data_volt",
+                "offset": 5,
+                "length": 96,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "buffer",
+                "name": "data_temp",
+                "offset": 103,
+                "length": 30,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            }
+        ],
+        "swap1": "",
+        "swap2": "",
+        "swap3": "",
+        "swap1Type": "swap",
+        "swap2Type": "swap",
+        "swap3Type": "swap",
+        "msgProperty": "payload",
+        "msgPropertyType": "str",
+        "resultType": "keyvalue",
+        "resultTypeType": "return",
+        "multipleResult": false,
+        "fanOutMultipleResult": false,
+        "setTopic": true,
+        "outputs": 1,
+        "x": 660,
+        "y": 580,
+        "wires": [
+            [
+                "250287bc5c50d9d4"
+            ]
+        ]
+    },
+    {
+        "id": "250287bc5c50d9d4",
+        "type": "function",
+        "z": "82c27bbba924f8af",
+        "name": "process P7",
+        "func": "var buffer = Buffer.from(msg.payload.data_volt)\nvar hvsBatteryVoltsperCell = [];\nvar hvsBatteryTempperCell = [];\nhvsBatteryVoltsperCell = flow.get(\"hvsBatteryVoltsperCell\");\nvar MaxCells = flow.get(\"hvsNumCells\") - 80;\nif (MaxCells > 48) { MaxCells = 48; }\nfor (let i = 0; i < MaxCells; i++)\n{\n   hvsBatteryVoltsperCell[i+80] = ((buffer[i*2]*256 + buffer[i*2+1])/1000.0);\n}\nfunction mapping(arrdata) {\n   const arres = arrdata.map(data => {\n      return (data*1.0);\n   });\n   return arres;\n}\nbuffer = Buffer.from(msg.payload.data_temp);\nvar MaxTemps = flow.get(\"hvsNumTemps\");\nif (MaxTemps > 30) { MaxTemps = 30; }\nfor (let i = 0; i < MaxTemps; i++) {\n   hvsBatteryTempperCell[i] = buffer[i];\n}\n//hvsBatteryTempperCell = msg.payload.data_temp;\nmsg.payload = { hvsBatteryVoltsperCell, hvsBatteryTempperCell };\nflow.set(\"hvsBatteryVoltsperCell\", hvsBatteryVoltsperCell);\nflow.set(\"hvsBatteryTempperCell\", hvsBatteryTempperCell)\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 580,
+        "wires": [
+            [
+                "0431407c362f6876"
+            ]
+        ]
+    },
+    {
+        "id": "0431407c362f6876",
+        "type": "debug",
+        "z": "82c27bbba924f8af",
+        "name": "debug 25",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1000,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "323554b6efed8c17",
+        "type": "function",
+        "z": "82c27bbba924f8af",
+        "name": "packet 8",
+        "func": "msg.payload = Buffer.from(\"01030558004104e5\", \"hex\");\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 660,
+        "wires": [
+            [
+                "af8ac899a3cb7afe"
+            ]
+        ]
+    },
+    {
+        "id": "af8ac899a3cb7afe",
+        "type": "tcp request",
+        "z": "82c27bbba924f8af",
+        "name": "BYD Battery",
+        "server": "192.168.1.82",
+        "port": "8080",
+        "out": "time",
+        "ret": "buffer",
+        "splitc": "1000",
+        "newline": "",
+        "trim": false,
+        "tls": "",
+        "x": 470,
+        "y": 660,
+        "wires": [
+            [
+                "d6254bdf65160673"
+            ]
+        ]
+    },
+    {
+        "id": "d6254bdf65160673",
+        "type": "buffer-parser",
+        "z": "82c27bbba924f8af",
+        "name": "parse P8",
+        "data": "payload",
+        "dataType": "msg",
+        "specification": "spec",
+        "specificationType": "ui",
+        "items": [
+            {
+                "type": "buffer",
+                "name": "data_temp",
+                "offset": 5,
+                "length": -1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            }
+        ],
+        "swap1": "",
+        "swap2": "",
+        "swap3": "",
+        "swap1Type": "swap",
+        "swap2Type": "swap",
+        "swap3Type": "swap",
+        "msgProperty": "payload",
+        "msgPropertyType": "str",
+        "resultType": "keyvalue",
+        "resultTypeType": "return",
+        "multipleResult": false,
+        "fanOutMultipleResult": false,
+        "setTopic": true,
+        "outputs": 1,
+        "x": 660,
+        "y": 660,
+        "wires": [
+            [
+                "3041d68fbcb15582"
+            ]
+        ]
+    },
+    {
+        "id": "3041d68fbcb15582",
+        "type": "function",
+        "z": "82c27bbba924f8af",
+        "name": "process P8",
+        "func": "var buffer = Buffer.from(msg.payload.data_temp)\nvar hvsBatteryTempperCell = [];\nvar hvsBatteryVoltsperCell = [];\nhvsBatteryVoltsperCell = flow.get(\"hvsBatteryVoltsperCell\");\nhvsBatteryTempperCell = flow.get(\"hvsBatteryTempperCell\");\nbuffer = Buffer.from(msg.payload.data_temp);\nvar MaxTemps = flow.get(\"hvsNumTemps\") -30;\nif (MaxTemps > 34) { MaxTemps = 34; }\nfor (let i = 0; i < MaxTemps; i++) {\n   hvsBatteryTempperCell[i+30] = buffer[i];\n}\nmsg.payload = { hvsBatteryVoltsperCell, hvsBatteryTempperCell };\nflow.set(\"hvsBatteryVoltsperCell\", hvsBatteryVoltsperCell);\nflow.set(\"hvsBatteryTempperCell\", hvsBatteryTempperCell)\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 660,
+        "wires": [
+            [
+                "2d00c17f885f345b"
+            ]
+        ]
+    },
+    {
+        "id": "2d00c17f885f345b",
+        "type": "debug",
+        "z": "82c27bbba924f8af",
+        "name": "debug 26",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1000,
+        "y": 660,
+        "wires": []
+    }
+]
