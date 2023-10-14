@@ -240,12 +240,12 @@
         ],
         "repeat": "",
         "crontab": "",
-        "once": false,
+        "once": true,
         "onceDelay": 0.1,
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 140,
+        "x": 130,
         "y": 60,
         "wires": [
             [
@@ -618,7 +618,7 @@
                 "offset": 5,
                 "length": 1,
                 "offsetbit": 0,
-                "scale": "1",
+                "scale": "0.001",
                 "mask": ""
             },
             {
@@ -627,7 +627,7 @@
                 "offset": 7,
                 "length": 1,
                 "offsetbit": 0,
-                "scale": "1",
+                "scale": "0.001",
                 "mask": ""
             },
             {
@@ -729,7 +729,7 @@
         "type": "function",
         "z": "82c27bbba924f8af",
         "name": "process P5",
-        "func": "var buffer = Buffer.from(msg.payload.data_volt)\nvar hvsBatteryVoltsperCell = [];\nconst MaxCells = 16;\nfor (let i = 0; i < MaxCells; i++)\n{\n   hvsBatteryVoltsperCell[i] = ((buffer[i*2]*256 + buffer[i*2+1])/1000.0);\n}\nmsg.payload = {hvsBatteryVoltsperCell, };\nflow.set(\"hvsBatteryVoltsperCell\", hvsBatteryVoltsperCell);\nreturn msg",
+        "func": "var buffer = Buffer.from(msg.payload.data_volt)\nvar hvsBatteryVoltsperCell = [];\nconst MaxCells = 16;\nfor (let i = 0; i < MaxCells; i++)\n{\n   hvsBatteryVoltsperCell[i] = ((buffer[i*2]*256 + buffer[i*2+1])/1000.0);\n}\nmsg.payload = {hvsBatteryVoltsperCell };\nflow.set(\"hvsBatteryVoltsperCell\", hvsBatteryVoltsperCell);\nreturn msg",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1201,7 +1201,7 @@
         "type": "function",
         "z": "82c27bbba924f8af",
         "name": "process P8",
-        "func": "var buffer = Buffer.from(msg.payload.data_temp)\nvar hvsBatteryTempperCell = [];\nvar hvsBatteryVoltsperCell = [];\nhvsBatteryVoltsperCell = flow.get(\"hvsBatteryVoltsperCell\");\nhvsBatteryTempperCell = flow.get(\"hvsBatteryTempperCell\");\nbuffer = Buffer.from(msg.payload.data_temp);\nvar MaxTemps = flow.get(\"hvsNumTemps\") -30;\nif (MaxTemps > 34) { MaxTemps = 34; }\nfor (let i = 0; i < MaxTemps; i++) {\n   hvsBatteryTempperCell[i+30] = buffer[i];\n}\nmsg.payload = { hvsBatteryVoltsperCell, hvsBatteryTempperCell };\nflow.set(\"hvsBatteryVoltsperCell\", hvsBatteryVoltsperCell);\nflow.set(\"hvsBatteryTempperCell\", hvsBatteryTempperCell)\nreturn msg",
+        "func": "var buffer = Buffer.from(msg.payload.data_temp)\nvar hvsBatteryTempperCell = [];\nvar hvsBatteryVoltsperCell = [];\nhvsBatteryVoltsperCell = flow.get(\"hvsBatteryVoltsperCell\");\nhvsBatteryTempperCell = flow.get(\"hvsBatteryTempperCell\");\nbuffer = Buffer.from(msg.payload.data_temp);\nvar MaxTemps = flow.get(\"hvsNumTemps\") -30;\nif (MaxTemps > 34) { MaxTemps = 34; }\nfor (let i = 0; i < MaxTemps; i++) {\n   hvsBatteryTempperCell[i+30] = buffer[i];\n}\nmsg.payload = { hvsBatteryVoltsperCell, hvsBatteryTempperCell };\nflow.set(\"hvsBatteryVoltsperCell\", hvsBatteryVoltsperCell);\nflow.set(\"hvsBatteryTempperCell\", hvsBatteryTempperCell)\nmsg.complete\nreturn msg",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1211,7 +1211,9 @@
         "y": 660,
         "wires": [
             [
-                "2d00c17f885f345b"
+                "2d00c17f885f345b",
+                "b18bdf672ae7df9f",
+                "8ac2652f45468bbd"
             ]
         ]
     },
@@ -1220,14 +1222,14 @@
         "type": "debug",
         "z": "82c27bbba924f8af",
         "name": "debug 26",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1000,
+        "x": 1040,
         "y": 660,
         "wires": []
     },
@@ -1236,14 +1238,14 @@
         "type": "debug",
         "z": "82c27bbba924f8af",
         "name": "debug 27",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1100,
+        "x": 1120,
         "y": 380,
         "wires": []
     },
@@ -1268,7 +1270,79 @@
         "y": 380,
         "wires": [
             [
-                "8c0a926b81e92c0d"
+                "8c0a926b81e92c0d",
+                "8ac2652f45468bbd"
+            ]
+        ]
+    },
+    {
+        "id": "8ac2652f45468bbd",
+        "type": "join",
+        "z": "82c27bbba924f8af",
+        "name": "",
+        "mode": "custom",
+        "build": "merged",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 1270,
+        "y": 560,
+        "wires": [
+            [
+                "eb3659071c954ab0"
+            ]
+        ]
+    },
+    {
+        "id": "eb3659071c954ab0",
+        "type": "debug",
+        "z": "82c27bbba924f8af",
+        "name": "debug 28",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1400,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "b18bdf672ae7df9f",
+        "type": "change",
+        "z": "82c27bbba924f8af",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "complete",
+                "pt": "msg",
+                "to": "",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1070,
+        "y": 720,
+        "wires": [
+            [
+                "8ac2652f45468bbd"
             ]
         ]
     }
