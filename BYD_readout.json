@@ -703,7 +703,8 @@
         "y": 440,
         "wires": [
             [
-                "eb12f357e462128e"
+                "eb12f357e462128e",
+                "ba469c6dc623a60f"
             ]
         ]
     },
@@ -712,7 +713,7 @@
         "type": "debug",
         "z": "82c27bbba924f8af",
         "name": "debug 21",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -728,7 +729,7 @@
         "type": "function",
         "z": "82c27bbba924f8af",
         "name": "process P5",
-        "func": "var buffer = Buffer.from(msg.payload.data_volt)\nvar hvsBatteryVoltsperCell = [];\nconst MaxCells = 16;\nfor (let i = 0; i < MaxCells; i++)\n{\n   hvsBatteryVoltsperCell[i] = ((buffer[i*2]*256 + buffer[i*2+1])/1000.0);\n}\nmsg.payload = {hvsBatteryVoltsperCell};\nflow.set(\"hvsBatteryVoltsperCell\", hvsBatteryVoltsperCell);\nreturn msg",
+        "func": "var buffer = Buffer.from(msg.payload.data_volt)\nvar hvsBatteryVoltsperCell = [];\nconst MaxCells = 16;\nfor (let i = 0; i < MaxCells; i++)\n{\n   hvsBatteryVoltsperCell[i] = ((buffer[i*2]*256 + buffer[i*2+1])/1000.0);\n}\nmsg.payload = {hvsBatteryVoltsperCell, };\nflow.set(\"hvsBatteryVoltsperCell\", hvsBatteryVoltsperCell);\nreturn msg",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -975,7 +976,7 @@
         "type": "debug",
         "z": "82c27bbba924f8af",
         "name": "debug 24",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1102,7 +1103,7 @@
         "type": "debug",
         "z": "82c27bbba924f8af",
         "name": "debug 25",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1229,5 +1230,46 @@
         "x": 1000,
         "y": 660,
         "wires": []
+    },
+    {
+        "id": "8c0a926b81e92c0d",
+        "type": "debug",
+        "z": "82c27bbba924f8af",
+        "name": "debug 27",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1100,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "ba469c6dc623a60f",
+        "type": "change",
+        "z": "82c27bbba924f8af",
+        "name": "",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload.data_volt",
+                "pt": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 900,
+        "y": 380,
+        "wires": [
+            [
+                "8c0a926b81e92c0d"
+            ]
+        ]
     }
 ]
