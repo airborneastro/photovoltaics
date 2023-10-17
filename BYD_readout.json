@@ -35,7 +35,7 @@
         "port": "8080",
         "out": "time",
         "ret": "buffer",
-        "splitc": "1000",
+        "splitc": "100",
         "newline": "",
         "trim": false,
         "tls": "",
@@ -220,8 +220,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1000,
-        "y": 140,
+        "x": 1020,
+        "y": 120,
         "wires": []
     },
     {
@@ -404,7 +404,7 @@
         "port": "8080",
         "out": "time",
         "ret": "buffer",
-        "splitc": "1000",
+        "splitc": "100",
         "newline": "",
         "trim": false,
         "tls": "",
@@ -464,7 +464,7 @@
         "finalize": "",
         "libs": [],
         "x": 300,
-        "y": 440,
+        "y": 480,
         "wires": [
             [
                 "7cb3cff9e167e039"
@@ -480,12 +480,12 @@
         "port": "8080",
         "out": "time",
         "ret": "buffer",
-        "splitc": "1000",
+        "splitc": "100",
         "newline": "",
         "trim": false,
         "tls": "",
         "x": 470,
-        "y": 440,
+        "y": 480,
         "wires": [
             [
                 "44e44acc783bb4c5",
@@ -516,20 +516,20 @@
         "id": "e76d1996868897fe",
         "type": "tcp request",
         "z": "82c27bbba924f8af",
-        "name": "BYD Battery 4sec",
+        "name": "BYD Battery",
         "server": "192.168.1.82",
         "port": "8080",
         "out": "time",
         "ret": "buffer",
-        "splitc": "4000",
+        "splitc": "100",
         "newline": "",
         "trim": false,
         "tls": "",
-        "x": 490,
+        "x": 470,
         "y": 380,
         "wires": [
             [
-                "1d481640e8640cc0"
+                "8725cc88defd606c"
             ]
         ]
     },
@@ -590,7 +590,7 @@
         "port": "8080",
         "out": "time",
         "ret": "buffer",
-        "splitc": "1000",
+        "splitc": "100",
         "newline": "",
         "trim": false,
         "tls": "",
@@ -700,7 +700,7 @@
         "setTopic": true,
         "outputs": 1,
         "x": 660,
-        "y": 440,
+        "y": 480,
         "wires": [
             [
                 "eb12f357e462128e",
@@ -721,7 +721,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1000,
-        "y": 440,
+        "y": 480,
         "wires": []
     },
     {
@@ -736,7 +736,7 @@
         "finalize": "",
         "libs": [],
         "x": 850,
-        "y": 440,
+        "y": 480,
         "wires": [
             [
                 "8c87e81202a82f2d"
@@ -771,7 +771,7 @@
         "port": "8080",
         "out": "time",
         "ret": "buffer",
-        "splitc": "1000",
+        "splitc": "100",
         "newline": "",
         "trim": false,
         "tls": "",
@@ -881,7 +881,7 @@
         "finalize": "",
         "libs": [],
         "x": 300,
-        "y": 500,
+        "y": 540,
         "wires": [
             [
                 "ab919006df0f72ce"
@@ -897,12 +897,12 @@
         "port": "8080",
         "out": "time",
         "ret": "buffer",
-        "splitc": "1000",
+        "splitc": "100",
         "newline": "",
         "trim": false,
         "tls": "",
         "x": 470,
-        "y": 500,
+        "y": 540,
         "wires": [
             [
                 "7d6724f442bbc926",
@@ -945,7 +945,7 @@
         "setTopic": true,
         "outputs": 1,
         "x": 660,
-        "y": 500,
+        "y": 540,
         "wires": [
             [
                 "2e3cac6546d4cd0a"
@@ -964,7 +964,7 @@
         "finalize": "",
         "libs": [],
         "x": 850,
-        "y": 500,
+        "y": 540,
         "wires": [
             [
                 "e22cc9dc4789878c"
@@ -984,7 +984,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1000,
-        "y": 500,
+        "y": 540,
         "wires": []
     },
     {
@@ -999,7 +999,7 @@
         "finalize": "",
         "libs": [],
         "x": 300,
-        "y": 560,
+        "y": 600,
         "wires": [
             [
                 "221f4686a5bc4096"
@@ -1015,12 +1015,12 @@
         "port": "8080",
         "out": "time",
         "ret": "buffer",
-        "splitc": "1000",
+        "splitc": "100",
         "newline": "",
         "trim": false,
         "tls": "",
         "x": 470,
-        "y": 560,
+        "y": 600,
         "wires": [
             [
                 "a9354e6ad9a7211d",
@@ -1072,7 +1072,7 @@
         "setTopic": true,
         "outputs": 1,
         "x": 660,
-        "y": 560,
+        "y": 600,
         "wires": [
             [
                 "250287bc5c50d9d4"
@@ -1091,7 +1091,7 @@
         "finalize": "",
         "libs": [],
         "x": 850,
-        "y": 560,
+        "y": 600,
         "wires": [
             [
                 "0431407c362f6876"
@@ -1111,7 +1111,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1000,
-        "y": 560,
+        "y": 600,
         "wires": []
     },
     {
@@ -1126,7 +1126,7 @@
         "finalize": "",
         "libs": [],
         "x": 300,
-        "y": 620,
+        "y": 660,
         "wires": [
             [
                 "af8ac899a3cb7afe"
@@ -1142,12 +1142,12 @@
         "port": "8080",
         "out": "time",
         "ret": "buffer",
-        "splitc": "1000",
+        "splitc": "100",
         "newline": "",
         "trim": false,
         "tls": "",
         "x": 470,
-        "y": 620,
+        "y": 660,
         "wires": [
             [
                 "d6254bdf65160673",
@@ -1190,7 +1190,7 @@
         "setTopic": true,
         "outputs": 1,
         "x": 660,
-        "y": 620,
+        "y": 660,
         "wires": [
             [
                 "3041d68fbcb15582"
@@ -1209,7 +1209,7 @@
         "finalize": "",
         "libs": [],
         "x": 850,
-        "y": 620,
+        "y": 660,
         "wires": [
             [
                 "2d00c17f885f345b",
@@ -1231,7 +1231,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1040,
-        "y": 620,
+        "y": 660,
         "wires": []
     },
     {
@@ -1247,7 +1247,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1120,
-        "y": 380,
+        "y": 420,
         "wires": []
     },
     {
@@ -1268,7 +1268,7 @@
         "to": "",
         "reg": false,
         "x": 880,
-        "y": 380,
+        "y": 420,
         "wires": [
             [
                 "8c0a926b81e92c0d",
@@ -1341,7 +1341,7 @@
         "to": "",
         "reg": false,
         "x": 1070,
-        "y": 680,
+        "y": 720,
         "wires": [
             [
                 "8ac2652f45468bbd"
@@ -1461,20 +1461,20 @@
         "id": "4cff971c82389e57",
         "type": "tcp request",
         "z": "82c27bbba924f8af",
-        "name": "BYD Battery 8sec",
+        "name": "BYD Battery",
         "server": "192.168.1.82",
         "port": "8080",
         "out": "time",
         "ret": "buffer",
-        "splitc": "8000",
+        "splitc": "100",
         "newline": "",
         "trim": false,
         "tls": "",
-        "x": 490,
+        "x": 470,
         "y": 860,
         "wires": [
             [
-                "d059a48b43767c7c"
+                "46652f734941bd20"
             ]
         ]
     },
@@ -1490,7 +1490,7 @@
         "finalize": "",
         "libs": [],
         "x": 300,
-        "y": 920,
+        "y": 960,
         "wires": [
             [
                 "d37225b15f9b9a6f"
@@ -1511,10 +1511,11 @@
         "trim": false,
         "tls": "",
         "x": 470,
-        "y": 920,
+        "y": 960,
         "wires": [
             [
-                "3a02a021c2f0434e"
+                "3a02a021c2f0434e",
+                "7ebc21d9c3cb97b1"
             ]
         ]
     },
@@ -1553,7 +1554,7 @@
         "setTopic": true,
         "outputs": 1,
         "x": 670,
-        "y": 920,
+        "y": 960,
         "wires": [
             [
                 "bcfdf9e1cfbb7980"
@@ -1572,7 +1573,7 @@
         "finalize": "",
         "libs": [],
         "x": 850,
-        "y": 920,
+        "y": 960,
         "wires": [
             [
                 "5bf3d0ed7a700568"
@@ -1591,7 +1592,7 @@
         "finalize": "",
         "libs": [],
         "x": 300,
-        "y": 980,
+        "y": 1040,
         "wires": [
             [
                 "0032f4dd0e6689d1"
@@ -1633,7 +1634,7 @@
         "setTopic": true,
         "outputs": 1,
         "x": 670,
-        "y": 980,
+        "y": 1040,
         "wires": [
             [
                 "348252525a1f4f82"
@@ -1654,7 +1655,7 @@
         "trim": false,
         "tls": "",
         "x": 470,
-        "y": 980,
+        "y": 1040,
         "wires": [
             [
                 "59f1409d8ec76b1b"
@@ -1673,7 +1674,7 @@
         "finalize": "",
         "libs": [],
         "x": 850,
-        "y": 980,
+        "y": 1040,
         "wires": [
             [
                 "a467a5a2f189c2f0"
@@ -1692,7 +1693,7 @@
         "finalize": "",
         "libs": [],
         "x": 840,
-        "y": 680,
+        "y": 720,
         "wires": [
             [
                 "b18bdf672ae7df9f"
@@ -1718,7 +1719,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1030,
+        "x": 1070,
         "y": 980,
         "wires": [
             [
@@ -1738,8 +1739,74 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1000,
+        "x": 1020,
         "y": 920,
         "wires": []
+    },
+    {
+        "id": "8725cc88defd606c",
+        "type": "switch",
+        "z": "82c27bbba924f8af",
+        "name": "reg 0x551 bit 0 set?",
+        "property": "payload[4]",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            },
+            {
+                "t": "gt",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 130,
+        "y": 440,
+        "wires": [
+            [
+                "0a9f875b9769ce4b"
+            ],
+            [
+                "1d481640e8640cc0"
+            ]
+        ]
+    },
+    {
+        "id": "46652f734941bd20",
+        "type": "switch",
+        "z": "82c27bbba924f8af",
+        "name": "reg 0x551 bit 0 set?",
+        "property": "payload[4]",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            },
+            {
+                "t": "gt",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 130,
+        "y": 920,
+        "wires": [
+            [
+                "371e9355eb45d0cd"
+            ],
+            [
+                "d059a48b43767c7c"
+            ]
+        ]
     }
 ]
