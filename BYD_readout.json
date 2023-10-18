@@ -1,13 +1,5 @@
 [
     {
-        "id": "82c27bbba924f8af",
-        "type": "tab",
-        "label": "BYD readout",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
         "id": "c1bf54aba015a59c",
         "type": "function",
         "z": "82c27bbba924f8af",
@@ -18,7 +10,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 300,
+        "x": 320,
         "y": 140,
         "wires": [
             [
@@ -39,7 +31,7 @@
         "newline": "",
         "trim": false,
         "tls": "",
-        "x": 470,
+        "x": 490,
         "y": 140,
         "wires": [
             [
@@ -181,7 +173,7 @@
         "fanOutMultipleResult": false,
         "setTopic": true,
         "outputs": 1,
-        "x": 660,
+        "x": 680,
         "y": 140,
         "wires": [
             [
@@ -220,8 +212,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1020,
-        "y": 120,
+        "x": 1040,
+        "y": 140,
         "wires": []
     },
     {
@@ -264,7 +256,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 300,
+        "x": 320,
         "y": 60,
         "wires": [
             [
@@ -387,7 +379,7 @@
         "fanOutMultipleResult": false,
         "setTopic": true,
         "outputs": 1,
-        "x": 660,
+        "x": 680,
         "y": 60,
         "wires": [
             [
@@ -408,7 +400,7 @@
         "newline": "",
         "trim": false,
         "tls": "",
-        "x": 470,
+        "x": 490,
         "y": 60,
         "wires": [
             [
@@ -429,7 +421,7 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1000,
+        "x": 1020,
         "y": 60,
         "wires": []
     },
@@ -444,7 +436,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 850,
+        "x": 870,
         "y": 60,
         "wires": [
             [
@@ -463,7 +455,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 300,
+        "x": 320,
         "y": 480,
         "wires": [
             [
@@ -478,13 +470,13 @@
         "name": "BYD Battery",
         "server": "192.168.1.82",
         "port": "8080",
-        "out": "time",
+        "out": "count",
         "ret": "buffer",
-        "splitc": "100",
+        "splitc": "135",
         "newline": "",
         "trim": false,
         "tls": "",
-        "x": 470,
+        "x": 490,
         "y": 480,
         "wires": [
             [
@@ -504,7 +496,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 300,
+        "x": 320,
         "y": 380,
         "wires": [
             [
@@ -519,13 +511,13 @@
         "name": "BYD Battery",
         "server": "192.168.1.82",
         "port": "8080",
-        "out": "time",
+        "out": "count",
         "ret": "buffer",
-        "splitc": "100",
+        "splitc": "7",
         "newline": "",
         "trim": false,
         "tls": "",
-        "x": 470,
+        "x": 490,
         "y": 380,
         "wires": [
             [
@@ -554,7 +546,7 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 120,
+        "x": 140,
         "y": 320,
         "wires": [
             [
@@ -573,7 +565,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 300,
+        "x": 320,
         "y": 320,
         "wires": [
             [
@@ -588,13 +580,13 @@
         "name": "BYD Battery",
         "server": "192.168.1.82",
         "port": "8080",
-        "out": "time",
+        "out": "count",
         "ret": "buffer",
-        "splitc": "100",
+        "splitc": "8",
         "newline": "",
         "trim": false,
         "tls": "",
-        "x": 470,
+        "x": 490,
         "y": 320,
         "wires": [
             [
@@ -699,7 +691,7 @@
         "fanOutMultipleResult": false,
         "setTopic": true,
         "outputs": 1,
-        "x": 660,
+        "x": 680,
         "y": 480,
         "wires": [
             [
@@ -720,7 +712,7 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1000,
+        "x": 1020,
         "y": 480,
         "wires": []
     },
@@ -729,13 +721,13 @@
         "type": "function",
         "z": "82c27bbba924f8af",
         "name": "process P5",
-        "func": "var buffer = Buffer.from(msg.payload.data_volt)\nvar hvsBatteryVoltsperCell = [];\nconst MaxCells = 16;\nfor (let i = 0; i < MaxCells; i++)\n{\n   hvsBatteryVoltsperCell[i+1] = ((buffer[i*2]*256 + buffer[i*2+1])/1000.0);\n}\nmsg.payload = {hvsBatteryVoltsperCell };\nflow.set(\"hvsBatteryVoltsperCell\", hvsBatteryVoltsperCell);\nreturn msg",
+        "func": "var buffer = Buffer.from(msg.payload.data_volt)\nvar hvsBatteryVoltsperCell = [];\nconst MaxCells = 16;\n//hvsBatteryVoltsperCell[0]=0; //BYD counts from 1\nfor (let i = 0; i < MaxCells; i++)\n{\n   hvsBatteryVoltsperCell[i+1] = ((buffer[i*2]*256 + buffer[i*2+1])/1000.0);\n}\nmsg.payload = {hvsBatteryVoltsperCell };\nflow.set(\"hvsBatteryVoltsperCell\", hvsBatteryVoltsperCell);\nreturn msg",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 850,
+        "x": 870,
         "y": 480,
         "wires": [
             [
@@ -754,7 +746,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 300,
+        "x": 320,
         "y": 220,
         "wires": [
             [
@@ -775,7 +767,7 @@
         "newline": "",
         "trim": false,
         "tls": "",
-        "x": 470,
+        "x": 490,
         "y": 220,
         "wires": [
             [
@@ -826,7 +818,7 @@
         "fanOutMultipleResult": false,
         "setTopic": true,
         "outputs": 1,
-        "x": 660,
+        "x": 680,
         "y": 220,
         "wires": [
             [
@@ -846,7 +838,7 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1000,
+        "x": 1020,
         "y": 220,
         "wires": []
     },
@@ -861,7 +853,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 850,
+        "x": 870,
         "y": 220,
         "wires": [
             [
@@ -880,7 +872,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 300,
+        "x": 320,
         "y": 540,
         "wires": [
             [
@@ -895,13 +887,13 @@
         "name": "BYD Battery",
         "server": "192.168.1.82",
         "port": "8080",
-        "out": "time",
+        "out": "count",
         "ret": "buffer",
-        "splitc": "100",
+        "splitc": "135",
         "newline": "",
         "trim": false,
         "tls": "",
-        "x": 470,
+        "x": 490,
         "y": 540,
         "wires": [
             [
@@ -944,7 +936,7 @@
         "fanOutMultipleResult": false,
         "setTopic": true,
         "outputs": 1,
-        "x": 660,
+        "x": 680,
         "y": 540,
         "wires": [
             [
@@ -963,7 +955,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 850,
+        "x": 870,
         "y": 540,
         "wires": [
             [
@@ -983,7 +975,7 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1000,
+        "x": 1020,
         "y": 540,
         "wires": []
     },
@@ -998,7 +990,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 300,
+        "x": 320,
         "y": 600,
         "wires": [
             [
@@ -1013,13 +1005,13 @@
         "name": "BYD Battery",
         "server": "192.168.1.82",
         "port": "8080",
-        "out": "time",
+        "out": "count",
         "ret": "buffer",
-        "splitc": "100",
+        "splitc": "135",
         "newline": "",
         "trim": false,
         "tls": "",
-        "x": 470,
+        "x": 490,
         "y": 600,
         "wires": [
             [
@@ -1071,7 +1063,7 @@
         "fanOutMultipleResult": false,
         "setTopic": true,
         "outputs": 1,
-        "x": 660,
+        "x": 680,
         "y": 600,
         "wires": [
             [
@@ -1084,13 +1076,13 @@
         "type": "function",
         "z": "82c27bbba924f8af",
         "name": "process P7",
-        "func": "var buffer = Buffer.from(msg.payload.data_volt)\nvar hvsBatteryVoltsperCell = [];\nvar hvsBatteryTempperCell = [];\nhvsBatteryVoltsperCell = flow.get(\"hvsBatteryVoltsperCell\");\nvar MaxCells = flow.get(\"hvsNumCells\") - 80;\nif (MaxCells > 48) { MaxCells = 48; }\nfor (let i = 0; i < MaxCells; i++)\n{\n   hvsBatteryVoltsperCell[i+80+1] = ((buffer[i*2]*256 + buffer[i*2+1])/1000.0);\n}\nbuffer = Buffer.from(msg.payload.data_temp);\nvar MaxTemps = flow.get(\"hvsNumTemps\");\nif (MaxTemps > 30) { MaxTemps = 30; }\nfor (let i = 0; i < MaxTemps; i++) {\n   hvsBatteryTempperCell[i+1] = buffer[i];\n}\n//hvsBatteryTempperCell = msg.payload.data_temp;\nmsg.payload = { hvsBatteryVoltsperCell, hvsBatteryTempperCell };\nflow.set(\"hvsBatteryVoltsperCell\", hvsBatteryVoltsperCell);\nflow.set(\"hvsBatteryTempperCell\", hvsBatteryTempperCell)\nreturn msg",
+        "func": "var buffer = Buffer.from(msg.payload.data_volt)\nvar hvsBatteryVoltsperCell = [];\nvar hvsBatteryTempperCell = [];\nhvsBatteryVoltsperCell = flow.get(\"hvsBatteryVoltsperCell\");\nvar MaxCells = flow.get(\"hvsNumCells\") - 80;\nif (MaxCells > 48) { MaxCells = 48; }\nfor (let i = 0; i < MaxCells; i++)\n{\n   hvsBatteryVoltsperCell[i+80+1] = ((buffer[i*2]*256 + buffer[i*2+1])/1000.0);\n}\nbuffer = Buffer.from(msg.payload.data_temp);\n//hvsBatteryTempperCell[0]=0; //BYD counts from 1\nvar MaxTemps = flow.get(\"hvsNumTemps\");\nif (MaxTemps > 30) { MaxTemps = 30; }\nfor (let i = 0; i < MaxTemps; i++) {\n   hvsBatteryTempperCell[i+1] = buffer[i];\n}\n//hvsBatteryTempperCell = msg.payload.data_temp;\nmsg.payload = { hvsBatteryVoltsperCell, hvsBatteryTempperCell };\nflow.set(\"hvsBatteryVoltsperCell\", hvsBatteryVoltsperCell);\nflow.set(\"hvsBatteryTempperCell\", hvsBatteryTempperCell)\nreturn msg",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 850,
+        "x": 870,
         "y": 600,
         "wires": [
             [
@@ -1110,7 +1102,7 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1000,
+        "x": 1020,
         "y": 600,
         "wires": []
     },
@@ -1125,7 +1117,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 300,
+        "x": 320,
         "y": 660,
         "wires": [
             [
@@ -1140,13 +1132,13 @@
         "name": "BYD Battery",
         "server": "192.168.1.82",
         "port": "8080",
-        "out": "time",
+        "out": "count",
         "ret": "buffer",
-        "splitc": "100",
+        "splitc": "135",
         "newline": "",
         "trim": false,
         "tls": "",
-        "x": 470,
+        "x": 490,
         "y": 660,
         "wires": [
             [
@@ -1189,7 +1181,7 @@
         "fanOutMultipleResult": false,
         "setTopic": true,
         "outputs": 1,
-        "x": 660,
+        "x": 680,
         "y": 660,
         "wires": [
             [
@@ -1202,13 +1194,13 @@
         "type": "function",
         "z": "82c27bbba924f8af",
         "name": "process P8",
-        "func": "var buffer = Buffer.from(msg.payload.data_temp)\nvar hvsBatteryTempperCell = [];\nvar hvsBatteryVoltsperCell = [];\nhvsBatteryVoltsperCell = flow.get(\"hvsBatteryVoltsperCell\");\nhvsBatteryTempperCell = flow.get(\"hvsBatteryTempperCell\");\nbuffer = Buffer.from(msg.payload.data_temp);\nvar MaxTemps = flow.get(\"hvsNumTemps\") -30;\nif (MaxTemps > 34) { MaxTemps = 34; }\nfor (let i = 0; i < MaxTemps; i++) {\n   hvsBatteryTempperCell[i+30+1] = buffer[i];\n}\nmsg.payload = { hvsBatteryVoltsperCell, hvsBatteryTempperCell };\nflow.set(\"hvsBatteryVoltsperCell\", hvsBatteryVoltsperCell);\nflow.set(\"hvsBatteryTempperCell\", hvsBatteryTempperCell)\nmsg.complete\nreturn msg",
+        "func": "var buffer = Buffer.from(msg.payload.data_temp)\nvar hvsBatteryTempperCell = [];\nvar hvsBatteryVoltsperCell = [];\nhvsBatteryVoltsperCell = flow.get(\"hvsBatteryVoltsperCell\");\nhvsBatteryTempperCell = flow.get(\"hvsBatteryTempperCell\");\nbuffer = Buffer.from(msg.payload.data_temp);\nvar MaxTemps = flow.get(\"hvsNumTemps\") -30;\nif (MaxTemps > 34) { MaxTemps = 34; }\nfor (let i = 0; i < MaxTemps; i++) {\n   hvsBatteryTempperCell[i+30+1] = buffer[i];\n}\nmsg.payload = { hvsBatteryVoltsperCell, hvsBatteryTempperCell };\nflow.set(\"hvsBatteryVoltsperCell\", hvsBatteryVoltsperCell);\nflow.set(\"hvsBatteryTempperCell\", hvsBatteryTempperCell)\nreturn msg",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 850,
+        "x": 870,
         "y": 660,
         "wires": [
             [
@@ -1230,7 +1222,7 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1040,
+        "x": 1060,
         "y": 660,
         "wires": []
     },
@@ -1246,7 +1238,7 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1120,
+        "x": 1140,
         "y": 420,
         "wires": []
     },
@@ -1267,7 +1259,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 880,
+        "x": 900,
         "y": 420,
         "wires": [
             [
@@ -1296,7 +1288,7 @@
         "reduceInit": "",
         "reduceInitType": "",
         "reduceFixup": "",
-        "x": 1270,
+        "x": 1290,
         "y": 560,
         "wires": [
             [
@@ -1317,7 +1309,7 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1440,
+        "x": 1460,
         "y": 560,
         "wires": []
     },
@@ -1340,7 +1332,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1070,
+        "x": 1090,
         "y": 720,
         "wires": [
             [
@@ -1354,7 +1346,7 @@
         "z": "82c27bbba924f8af",
         "name": "README, be warned",
         "info": "\"General Batt info\" has to run once before reading cells data.\nIt is unclear if calling \"Cells info\" too often causes harm.\nYou are on your own risk!\nGeneral Batt info could probably polled regularly",
-        "x": 120,
+        "x": 140,
         "y": 280,
         "wires": []
     },
@@ -1369,7 +1361,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 280,
+        "x": 300,
         "y": 740,
         "wires": [
             [
@@ -1384,13 +1376,13 @@
         "name": "BYD Battery",
         "server": "192.168.1.82",
         "port": "8080",
-        "out": "time",
+        "out": "count",
         "ret": "buffer",
-        "splitc": "1000",
+        "splitc": "8",
         "newline": "",
         "trim": false,
         "tls": "",
-        "x": 470,
+        "x": 490,
         "y": 740,
         "wires": [
             [
@@ -1409,7 +1401,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 300,
+        "x": 320,
         "y": 800,
         "wires": [
             [
@@ -1428,7 +1420,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 300,
+        "x": 320,
         "y": 860,
         "wires": [
             [
@@ -1443,13 +1435,13 @@
         "name": "BYD Battery",
         "server": "192.168.1.82",
         "port": "8080",
-        "out": "time",
+        "out": "count",
         "ret": "buffer",
-        "splitc": "1000",
+        "splitc": "8",
         "newline": "",
         "trim": false,
         "tls": "",
-        "x": 470,
+        "x": 490,
         "y": 800,
         "wires": [
             [
@@ -1464,13 +1456,13 @@
         "name": "BYD Battery",
         "server": "192.168.1.82",
         "port": "8080",
-        "out": "time",
+        "out": "count",
         "ret": "buffer",
-        "splitc": "100",
+        "splitc": "7",
         "newline": "",
         "trim": false,
         "tls": "",
-        "x": 470,
+        "x": 490,
         "y": 860,
         "wires": [
             [
@@ -1489,7 +1481,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 300,
+        "x": 320,
         "y": 960,
         "wires": [
             [
@@ -1504,13 +1496,13 @@
         "name": "BYD Battery",
         "server": "192.168.1.82",
         "port": "8080",
-        "out": "time",
+        "out": "count",
         "ret": "buffer",
-        "splitc": "1000",
+        "splitc": "135",
         "newline": "",
         "trim": false,
         "tls": "",
-        "x": 470,
+        "x": 490,
         "y": 960,
         "wires": [
             [
@@ -1553,7 +1545,7 @@
         "fanOutMultipleResult": false,
         "setTopic": true,
         "outputs": 1,
-        "x": 670,
+        "x": 690,
         "y": 960,
         "wires": [
             [
@@ -1572,7 +1564,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 850,
+        "x": 870,
         "y": 960,
         "wires": [
             [
@@ -1591,7 +1583,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 300,
+        "x": 320,
         "y": 1040,
         "wires": [
             [
@@ -1633,7 +1625,7 @@
         "fanOutMultipleResult": false,
         "setTopic": true,
         "outputs": 1,
-        "x": 670,
+        "x": 690,
         "y": 1040,
         "wires": [
             [
@@ -1648,13 +1640,13 @@
         "name": "BYD Battery",
         "server": "192.168.1.82",
         "port": "8080",
-        "out": "time",
+        "out": "count",
         "ret": "buffer",
-        "splitc": "1000",
+        "splitc": "135",
         "newline": "",
         "trim": false,
         "tls": "",
-        "x": 470,
+        "x": 490,
         "y": 1040,
         "wires": [
             [
@@ -1673,7 +1665,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 850,
+        "x": 870,
         "y": 1040,
         "wires": [
             [
@@ -1692,7 +1684,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 840,
+        "x": 860,
         "y": 720,
         "wires": [
             [
@@ -1719,8 +1711,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1070,
-        "y": 980,
+        "x": 1090,
+        "y": 1040,
         "wires": [
             [
                 "8ac2652f45468bbd"
@@ -1739,8 +1731,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1020,
-        "y": 920,
+        "x": 1040,
+        "y": 960,
         "wires": []
     },
     {
@@ -1765,7 +1757,7 @@
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "x": 130,
+        "x": 150,
         "y": 440,
         "wires": [
             [
@@ -1798,7 +1790,7 @@
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "x": 130,
+        "x": 150,
         "y": 920,
         "wires": [
             [
