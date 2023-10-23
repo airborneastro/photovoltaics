@@ -36,6 +36,8 @@ The queries for the grafana panels are written in the "flux" language for influx
 
 I added a node-RED flow to directly  [readout a BYD](https://github.com/airborneastro/photovoltaics/blob/main/BYD_readout.json) battery via its "WiFiAP" network address in the local network, based on the iobroker version of [christianh17](https://github.com/christianh17/ioBroker.bydhvs/blob/master/main.js). It will output voltage, current, SOC of the battery and many more parameters and can also display voltages and temperatures of all individual cells. It was tested with 2 Modules (5.1kWh) and should work with up to 5 Modules. The output is presently only in node-RED debug nodes, but could easily be used to send data to influxdb2. You can check with `echo -n -e "\x01\x03\x00\x00\x00\x66\xc5\xe0" | nc 192.168.xxx.xxx 8080` whether your BYD listens. You should see a reponse with the serial number in ASCII and some binary data.
 
+I also added a node-RED flow to read and operate the SMA EV charger ("wallbox"). Mostly adapted/simplified code from [here](https://homematic-forum.de/forum/viewtopic.php?f=18&t=72536&sid=5cbddf649a40e787d9da95c92fee1a37) and [here](https://github.com/Nerdiyde/NodeRedSnippets/tree/master/snippets/sma_devices). Note that the charging (parameter setting) functions have NOT been tested!
+
 All is "work in progress". The project runs in docker containers for node-RED, influxdb2, grafana and homeassistant using a Raspberry Pi 4 (4GB).
 
 ![Dashboard](https://github.com/airborneastro/photovoltaics/blob/main/Grafana_SMA_STP_SE10_part1.PNG)
