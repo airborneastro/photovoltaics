@@ -1,0 +1,1639 @@
+[
+    {
+        "id": "39dba166d856a060",
+        "type": "tab",
+        "label": "Wallbox",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "f895665d4d53bee0",
+        "type": "inject",
+        "z": "39dba166d856a060",
+        "name": "get data (+ login)",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 180,
+        "y": 240,
+        "wires": [
+            [
+                "8a77f18632df3c43"
+            ]
+        ]
+    },
+    {
+        "id": "50c44a223e84fb07",
+        "type": "debug",
+        "z": "39dba166d856a060",
+        "name": "debug 31",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 760,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "e515127740b36910",
+        "type": "inject",
+        "z": "39dba166d856a060",
+        "name": "initiate variables",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 180,
+        "y": 140,
+        "wires": [
+            [
+                "d57bbc8b18135ffc"
+            ]
+        ]
+    },
+    {
+        "id": "d57bbc8b18135ffc",
+        "type": "function",
+        "z": "39dba166d856a060",
+        "name": "define your credentials here",
+        "func": "//Note: your credential data is saved in plain text! So if you share this code you should double check that you removed your credentials from here.\n\nvar username=\"\";\nvar password=\"\";\nvar wallbox_hostname=\"\";\n\nflow.set(\"wallbox_data_username\", username);\nflow.set(\"wallbox_data_password\", password);\nflow.set(\"wallbox_data_hostname\", wallbox_hostname);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "059da6c1fb52054c",
+        "type": "http request",
+        "z": "39dba166d856a060",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": true,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 550,
+        "y": 240,
+        "wires": [
+            [
+                "50c44a223e84fb07",
+                "e1aa66f8c15d67b6"
+            ]
+        ]
+    },
+    {
+        "id": "8a77f18632df3c43",
+        "type": "function",
+        "z": "39dba166d856a060",
+        "name": "prepare login",
+        "func": "msg.headers = {};\nmsg.headers = {\n    'Content-Type': 'application/x-www-form-urlencoded'\n};\nvar token_lifetime = 3600;\nvar timeDif = flow.get(\"wallbox_data_retrieve_token_date\") > 0 ? ((Date.now() - flow.get(\"wallbox_data_retrieve_token_date\")) / 1000).toFixed(0) : token_lifetime + 1;\n//msg.timeDif = timeDif;\nmsg.url = \"http://\" + flow.get(\"wallbox_data_hostname\") + \"/api/v1/token\"\nif (flow.get(\"wallbox_data_retrieve_token_date\") == undefined || timeDif > token_lifetime) //usually the token is valid for 1 hour. So after this time we will first retrieve a new one and continue then pulling the live data.\n{msg.payload = \n    \"grant_type=password&username=\"+flow.get(\"wallbox_data_username\")+\"&password=\"+flow.get(\"wallbox_data_password\")\n    return [msg, null];\n} else // the currently saved token is still valid so we will reuse this and can pull the live data directly\n{\n    return [null, msg];\n}\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 240,
+        "wires": [
+            [
+                "059da6c1fb52054c"
+            ],
+            [
+                "3bda9e7d5a38cf89"
+            ]
+        ]
+    },
+    {
+        "id": "2f76b4c66197b7b4",
+        "type": "http request",
+        "z": "39dba166d856a060",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": true,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 510,
+        "y": 340,
+        "wires": [
+            [
+                "05245140427596f4",
+                "28fa22a7db00a342"
+            ]
+        ]
+    },
+    {
+        "id": "3bda9e7d5a38cf89",
+        "type": "function",
+        "z": "39dba166d856a060",
+        "name": "function 7",
+        "func": "msg.headers = {\n    \"Authorization\": \"Bearer \" + flow.get(\"wallbox_data_retrieve_token\")\n};\nmsg.url = \"http://\" + flow.get(\"wallbox_data_hostname\") + \"/api/v1/measurements/live/\"\nmsg.payload =  [{ \"componentId\": \"IGULD:SELF\" }]    \nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 340,
+        "wires": [
+            [
+                "2f76b4c66197b7b4"
+            ]
+        ]
+    },
+    {
+        "id": "1df5bb23939efa8f",
+        "type": "inject",
+        "z": "39dba166d856a060",
+        "name": "get data",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 160,
+        "y": 340,
+        "wires": [
+            [
+                "3bda9e7d5a38cf89"
+            ]
+        ]
+    },
+    {
+        "id": "05245140427596f4",
+        "type": "debug",
+        "z": "39dba166d856a060",
+        "name": "debug 38",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "28fa22a7db00a342",
+        "type": "link out",
+        "z": "39dba166d856a060",
+        "name": "wallbox_data",
+        "mode": "link",
+        "links": [
+            "bb883a88bdc9773e",
+            "3ca9271fda1b81d4",
+            "0d60b70f80d2a66d",
+            "b2c1e3e37383eb4e",
+            "b3fdf8572f67bd9e",
+            "d9c2274e1d2f3dfe",
+            "55a271f216191a2b",
+            "72f5754fdcb7d20a",
+            "fca829997dae04be",
+            "5c4a9e92e04b98d5",
+            "e8f890bdad7e9c1f",
+            "b999e2a56c1c758c",
+            "8bb2c32a32ce29c1",
+            "1b675e0d46a1b59a",
+            "ad599736bf334514",
+            "10d68fde053709e9",
+            "8738b6cafbc8771b",
+            "66bf40a97a09a186"
+        ],
+        "x": 625,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "1edec459c7acb9ac",
+        "type": "function",
+        "z": "39dba166d856a060",
+        "name": "prepare login",
+        "func": "msg.headers = {};\nmsg.headers = {\n    'Content-Type': 'application/x-www-form-urlencoded'\n};\nmsg.url = \"http://\" + flow.get(\"wallbox_data_hostname\") + \"/api/v1/token\"\nmsg.payload = \n    \"grant_type=password&username=\"+flow.get(\"wallbox_data_username\")+\"&password=\"+flow.get(\"wallbox_data_password\")\n    return [msg, null];\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 1800,
+        "wires": [
+            [
+                "dd2dedf895708ef4"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "20432b3f4ce377b3",
+        "type": "inject",
+        "z": "39dba166d856a060",
+        "name": "force get token",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 160,
+        "y": 1800,
+        "wires": [
+            [
+                "1edec459c7acb9ac"
+            ]
+        ]
+    },
+    {
+        "id": "57f7eaf5770a4eae",
+        "type": "inject",
+        "z": "39dba166d856a060",
+        "name": "force token expired in max 100sec",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 220,
+        "y": 1920,
+        "wires": [
+            [
+                "8d0b3f1354675d88"
+            ]
+        ]
+    },
+    {
+        "id": "43217b0e76055b49",
+        "type": "inject",
+        "z": "39dba166d856a060",
+        "name": "check token expire time",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 180,
+        "y": 1860,
+        "wires": [
+            [
+                "e6f6b08534b1ba82"
+            ]
+        ]
+    },
+    {
+        "id": "e6f6b08534b1ba82",
+        "type": "function",
+        "z": "39dba166d856a060",
+        "name": "function 8",
+        "func": "var diff = Math.round((Date.now() -\n    flow.get(\"wallbox_data_retrieve_token_date\")) / 1000)\n\nmsg.payload = {\"token date\": flow.get(\"wallbox_data_retrieve_token_date\"), \"Elapsed\" :diff, \"Remain\": 3600 - diff}\n//msg.topic = 3600-diff;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 1860,
+        "wires": [
+            [
+                "49d54878edb15257"
+            ]
+        ]
+    },
+    {
+        "id": "49d54878edb15257",
+        "type": "debug",
+        "z": "39dba166d856a060",
+        "name": "debug 39",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 1860,
+        "wires": []
+    },
+    {
+        "id": "8d0b3f1354675d88",
+        "type": "function",
+        "z": "39dba166d856a060",
+        "name": "function 9",
+        "func": "flow.set(\"wallbox_data_retrieve_token_date\",Date.now()-3500*1000)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 1920,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "dd2dedf895708ef4",
+        "type": "http request",
+        "z": "39dba166d856a060",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": true,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 510,
+        "y": 1800,
+        "wires": [
+            [
+                "c0b03842c37cefa8"
+            ]
+        ]
+    },
+    {
+        "id": "0f30b348c78a7c69",
+        "type": "function",
+        "z": "39dba166d856a060",
+        "name": "show all",
+        "func": "var result = {}\nvar key\nvar val\nfor (let i=0; i < 28; i++) {\n    key = msg.payload[i].channelId\n    val = msg.payload[i].values[0].value\n    result[key] = val\n}\nmsg.payload = result;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 200,
+        "y": 460,
+        "wires": [
+            [
+                "3f2eafee9e644458",
+                "01d0cf42fd918811",
+                "0cb14790aea1a26d",
+                "693ed00b06716d1e"
+            ]
+        ]
+    },
+    {
+        "id": "3f2eafee9e644458",
+        "type": "debug",
+        "z": "39dba166d856a060",
+        "name": "debug 40",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 400,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "66bf40a97a09a186",
+        "type": "link in",
+        "z": "39dba166d856a060",
+        "name": "link in 1",
+        "links": [
+            "28fa22a7db00a342"
+        ],
+        "x": 105,
+        "y": 460,
+        "wires": [
+            [
+                "0f30b348c78a7c69"
+            ]
+        ]
+    },
+    {
+        "id": "44663f804c807873",
+        "type": "debug",
+        "z": "39dba166d856a060",
+        "name": "debug 41",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 690,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "01d0cf42fd918811",
+        "type": "function",
+        "z": "39dba166d856a060",
+        "name": "example single extract",
+        "func": "var extract_key\nvar extract_val\nvar extract\nextract = msg.payload[\"Setpoint.PlantControl.PCC.ChrgActCnt\"]\nextract_key = Object.keys(msg.payload)\nextract_val = Object.values(msg.payload)[0]\nmsg.payload = {\"Setpoint.PlantControl.PCC.ChrgActCnt\": extract}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 520,
+        "wires": [
+            [
+                "44663f804c807873"
+            ]
+        ]
+    },
+    {
+        "id": "e1aa66f8c15d67b6",
+        "type": "change",
+        "z": "39dba166d856a060",
+        "name": "store access_token",
+        "rules": [
+            {
+                "t": "set",
+                "p": "wallbox_data_retrieve_token",
+                "pt": "flow",
+                "to": "payload.access_token",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "wallbox_data_retrieve_token_date",
+                "pt": "flow",
+                "to": "",
+                "tot": "date"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 770,
+        "y": 240,
+        "wires": [
+            [
+                "3bda9e7d5a38cf89"
+            ]
+        ]
+    },
+    {
+        "id": "c0b03842c37cefa8",
+        "type": "change",
+        "z": "39dba166d856a060",
+        "name": "store access_token",
+        "rules": [
+            {
+                "t": "set",
+                "p": "wallbox_data_retrieve_token",
+                "pt": "flow",
+                "to": "payload.access_token",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "wallbox_data_retrieve_token_date",
+                "pt": "flow",
+                "to": "",
+                "tot": "date"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 710,
+        "y": 1800,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "686b4fdb5c626c79",
+        "type": "http request",
+        "z": "39dba166d856a060",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": true,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 530,
+        "y": 840,
+        "wires": [
+            [
+                "8ebf4a5acb4f751b"
+            ]
+        ]
+    },
+    {
+        "id": "3b1df4e2e0e3a174",
+        "type": "function",
+        "z": "39dba166d856a060",
+        "name": "function 11",
+        "func": "msg.headers = {\n    'Content-Type': 'application/json',\n    'Referer': 'http://sma3015227450/webui/Plant:1,IGULD:SELF/configuration/view-parameters',\n    'Authorization': 'Bearer ' + flow.get('wallbox_data_retrieve_token')\n};\nmsg.payload = {\"queryItems\":[{\"componentId\": \"IGULD:SELF\"}]}\nmsg.url = \"http://\" + flow.get(\"wallbox_data_hostname\") + \"/api/v1/parameters/search/\"   \nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 840,
+        "wires": [
+            [
+                "686b4fdb5c626c79"
+            ]
+        ]
+    },
+    {
+        "id": "42db0ec8fee482b2",
+        "type": "inject",
+        "z": "39dba166d856a060",
+        "name": "get data",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 840,
+        "wires": [
+            [
+                "24ce67e570c0cdee"
+            ]
+        ]
+    },
+    {
+        "id": "8ebf4a5acb4f751b",
+        "type": "debug",
+        "z": "39dba166d856a060",
+        "name": "debug 43",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "160204f8bb29a81c",
+        "type": "comment",
+        "z": "39dba166d856a060",
+        "name": "Read settings parameters",
+        "info": "",
+        "x": 130,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "1ae06c5ea96416c4",
+        "type": "http request",
+        "z": "39dba166d856a060",
+        "d": true,
+        "name": "",
+        "method": "PUT",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": true,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 610,
+        "y": 1320,
+        "wires": [
+            [
+                "afda84672f9e86e8"
+            ]
+        ]
+    },
+    {
+        "id": "44fa2cd11a0bbd5a",
+        "type": "function",
+        "z": "39dba166d856a060",
+        "name": "opt. laden",
+        "func": "msg.headers = {\n    'Content-Type': 'application/json',\n    'Referer': 'http://sma3015227450/webui/Plant:1,IGULD:SELF/configuration/view-parameters',\n    'Authorization': 'Bearer ' + flow.get('wallbox_data_retrieve_token')\n};\nmsg.url = \"http://\" + flow.get(\"wallbox_data_hostname\") + \"/api/v1/parameters/IGULD:SELF\"\nmsg.payload = {\"values\":[{\"channelId\": \"Parameter.Chrg.ActChaMod\", \"value\": \"4719\"}]}    \nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 1320,
+        "wires": [
+            [
+                "1ae06c5ea96416c4",
+                "afda84672f9e86e8"
+            ]
+        ]
+    },
+    {
+        "id": "806bee7cf4ed1e52",
+        "type": "inject",
+        "z": "39dba166d856a060",
+        "name": "set optimized charging",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 180,
+        "y": 1320,
+        "wires": [
+            [
+                "9edd6c720ee82f74"
+            ]
+        ]
+    },
+    {
+        "id": "afda84672f9e86e8",
+        "type": "debug",
+        "z": "39dba166d856a060",
+        "name": "debug 44",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 800,
+        "y": 1320,
+        "wires": []
+    },
+    {
+        "id": "1c086c3a8ff114b7",
+        "type": "inject",
+        "z": "39dba166d856a060",
+        "name": "set charge time",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 160,
+        "y": 1020,
+        "wires": [
+            [
+                "e35a454f582c7310"
+            ]
+        ]
+    },
+    {
+        "id": "e35a454f582c7310",
+        "type": "change",
+        "z": "39dba166d856a060",
+        "name": "enter charge time in h",
+        "rules": [
+            {
+                "t": "set",
+                "p": "chargetime",
+                "pt": "flow",
+                "to": "1.5",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 400,
+        "y": 1020,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c40c040e2b32e979",
+        "type": "change",
+        "z": "39dba166d856a060",
+        "name": "enter charge energy in kWh",
+        "rules": [
+            {
+                "t": "set",
+                "p": "charge",
+                "pt": "flow",
+                "to": "4",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 420,
+        "y": 1080,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "37dfa02eafe4e70c",
+        "type": "inject",
+        "z": "39dba166d856a060",
+        "name": "set charge energy",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 1080,
+        "wires": [
+            [
+                "c40c040e2b32e979"
+            ]
+        ]
+    },
+    {
+        "id": "a48006693df6b07e",
+        "type": "http request",
+        "z": "39dba166d856a060",
+        "d": true,
+        "name": "",
+        "method": "PUT",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": true,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 650,
+        "y": 1640,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f8380f94f933d6f0",
+        "type": "function",
+        "z": "39dba166d856a060",
+        "name": "charge to endtime",
+        "func": "var timestring = new Date(msg.payload);\nvar data = {\"values\": [{ \"channelId\": \n\"Parameter.Chrg.Plan.StopTm\", \"timestamp\": timestring, \"value\": (flow.get(\"endtimedate\")) },\n {\"channelId\" : \"Parameter.Chrg.Plan.En\", \"timestamp\": timestring, \n \"value\": flow.get(\"charge\").toString() }]}\n\nmsg.headers = {\n    'Content-Type': 'application/json',\n    'Content-Length': (JSON.stringify(data).length).toString(),\n    'Referer': 'http://sma3015227450/webui/Plant:1,IGULD:SELF/configuration/view-parameters',\n    'Authorization': 'Bearer ' + flow.get('wallbox_data_retrieve_token')\n};\n//msg.payload = {\"values\":[{\"channelId\": \"Parameter.Chrg.ActChaMod\", \"value\": \"4719\"}]}    \nmsg.payload = data\nmsg.url = \"http://\" + flow.get(\"wallbox_data_hostname\") + \"/api/v1/parameters/IGULD:SELF\"\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 1640,
+        "wires": [
+            [
+                "a48006693df6b07e",
+                "0a5c36f687b7a71d"
+            ]
+        ]
+    },
+    {
+        "id": "0a5c36f687b7a71d",
+        "type": "debug",
+        "z": "39dba166d856a060",
+        "name": "debug 45",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 1640,
+        "wires": []
+    },
+    {
+        "id": "ad42ee9c274c5bb7",
+        "type": "inject",
+        "z": "39dba166d856a060",
+        "name": "Set endtime",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "23.10.2023, 17:57:22 [UTC+2]",
+        "payloadType": "str",
+        "x": 150,
+        "y": 1140,
+        "wires": [
+            [
+                "375ae2ef18dfe0be"
+            ]
+        ]
+    },
+    {
+        "id": "7120a93dc2049e0a",
+        "type": "moment",
+        "z": "39dba166d856a060",
+        "name": "",
+        "topic": "",
+        "input": "payload",
+        "inputType": "msg",
+        "inTz": "ETC/GMT",
+        "adjAmount": 0,
+        "adjType": "days",
+        "adjDir": "add",
+        "format": "x",
+        "locale": "de-DE",
+        "output": "endtimedate",
+        "outputType": "flow",
+        "outTz": "ETC/GMT",
+        "x": 680,
+        "y": 1140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8a86c6f5ecd700ae",
+        "type": "inject",
+        "z": "39dba166d856a060",
+        "name": "start charge to endtime",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 180,
+        "y": 1640,
+        "wires": [
+            [
+                "38ace5e4c89b1a74"
+            ]
+        ]
+    },
+    {
+        "id": "593215dd36a71f2d",
+        "type": "function",
+        "z": "39dba166d856a060",
+        "name": "charge fixed time",
+        "func": "var timestring = new Date(msg.payload);\nvar data = {\"values\": [{ \"channelId\": \n\"Parameter.Chrg.Plan.DurTmm\", \"timestamp\": timestring, \"value\": (flow.get(\"chargetime\")*60).toFixed(0) },\n {\"channelId\" : \"Parameter.Chrg.Plan.En\", \"timestamp\": timestring, \n \"value\": flow.get(\"charge\").toString() }]}\n\nmsg.headers = {\n    'Content-Type': 'application/json',\n    'Content-Length': (JSON.stringify(data).length).toString(),\n    'Referer': 'http://sma3015227450/webui/Plant:1,IGULD:SELF/configuration/view-parameters',\n    'Authorization': 'Bearer ' + flow.get('wallbox_data_retrieve_token')\n};\n//msg.payload = {\"values\":[{\"channelId\": \"Parameter.Chrg.ActChaMod\", \"value\": \"4719\"}]}    \nmsg.payload = data\nmsg.url = \"http://\" + flow.get(\"wallbox_data_hostname\") + \"/api/v1/parameters/IGULD:SELF\"\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 1480,
+        "wires": [
+            [
+                "cd1ec3af460d3e3e",
+                "a4ebe77c6938268f"
+            ]
+        ]
+    },
+    {
+        "id": "cd1ec3af460d3e3e",
+        "type": "http request",
+        "z": "39dba166d856a060",
+        "d": true,
+        "name": "",
+        "method": "PUT",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": true,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 650,
+        "y": 1480,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "80f4c0a865cbdc15",
+        "type": "inject",
+        "z": "39dba166d856a060",
+        "name": "start charge fixed time",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 180,
+        "y": 1480,
+        "wires": [
+            [
+                "c59659314c404d49"
+            ]
+        ]
+    },
+    {
+        "id": "375ae2ef18dfe0be",
+        "type": "change",
+        "z": "39dba166d856a060",
+        "name": "enter end time and date",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "23.10.2023, 17:57:22 [UTC+2]",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 410,
+        "y": 1140,
+        "wires": [
+            [
+                "7120a93dc2049e0a"
+            ]
+        ]
+    },
+    {
+        "id": "a4ebe77c6938268f",
+        "type": "debug",
+        "z": "39dba166d856a060",
+        "name": "debug 50",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 1480,
+        "wires": []
+    },
+    {
+        "id": "680a999106e88e68",
+        "type": "http request",
+        "z": "39dba166d856a060",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": true,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 570,
+        "y": 1400,
+        "wires": [
+            [
+                "34fb14525bccb47f"
+            ]
+        ]
+    },
+    {
+        "id": "34fb14525bccb47f",
+        "type": "change",
+        "z": "39dba166d856a060",
+        "name": "store access_token",
+        "rules": [
+            {
+                "t": "set",
+                "p": "wallbox_data_retrieve_token",
+                "pt": "flow",
+                "to": "payload.access_token",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "wallbox_data_retrieve_token_date",
+                "pt": "flow",
+                "to": "",
+                "tot": "date"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 790,
+        "y": 1400,
+        "wires": [
+            [
+                "593215dd36a71f2d"
+            ]
+        ]
+    },
+    {
+        "id": "3ef2ab643e192a28",
+        "type": "http request",
+        "z": "39dba166d856a060",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": true,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 570,
+        "y": 1560,
+        "wires": [
+            [
+                "401e400cdffd62f4"
+            ]
+        ]
+    },
+    {
+        "id": "401e400cdffd62f4",
+        "type": "change",
+        "z": "39dba166d856a060",
+        "name": "store access_token",
+        "rules": [
+            {
+                "t": "set",
+                "p": "wallbox_data_retrieve_token",
+                "pt": "flow",
+                "to": "payload.access_token",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "wallbox_data_retrieve_token_date",
+                "pt": "flow",
+                "to": "",
+                "tot": "date"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 790,
+        "y": 1560,
+        "wires": [
+            [
+                "f8380f94f933d6f0"
+            ]
+        ]
+    },
+    {
+        "id": "0cb14790aea1a26d",
+        "type": "switch",
+        "z": "39dba166d856a060",
+        "name": "Mode switch",
+        "property": "payload[\"Measurement.Chrg.ModSw\"]",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "4950",
+                "vt": "num"
+            },
+            {
+                "t": "neq",
+                "v": "4950",
+                "vt": "num"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 420,
+        "y": 640,
+        "wires": [
+            [
+                "ada8e087cabb2d3d"
+            ],
+            [
+                "95a04f3b5f8a6ccb"
+            ]
+        ]
+    },
+    {
+        "id": "ada8e087cabb2d3d",
+        "type": "change",
+        "z": "39dba166d856a060",
+        "name": "ON",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "Mode switch is \"ON\"",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 580,
+        "y": 620,
+        "wires": [
+            [
+                "68ab60786ea5428c"
+            ]
+        ]
+    },
+    {
+        "id": "95a04f3b5f8a6ccb",
+        "type": "change",
+        "z": "39dba166d856a060",
+        "name": "OFF",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "Mode switch is \"OFF\"",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 580,
+        "y": 660,
+        "wires": [
+            [
+                "68ab60786ea5428c"
+            ]
+        ]
+    },
+    {
+        "id": "68ab60786ea5428c",
+        "type": "debug",
+        "z": "39dba166d856a060",
+        "name": "debug 53",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 730,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "693ed00b06716d1e",
+        "type": "debug",
+        "z": "39dba166d856a060",
+        "name": "extract \"Measurement.Chrg.ModSw\"",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload[\"Measurement.Chrg.ModSw\"]",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "ce4e6cb6c3cfc68c",
+        "type": "comment",
+        "z": "39dba166d856a060",
+        "name": "UNTESTED!!",
+        "info": "Untested!!! http request inactivated.",
+        "x": 160,
+        "y": 1440,
+        "wires": []
+    },
+    {
+        "id": "e11f7ff9c562893d",
+        "type": "comment",
+        "z": "39dba166d856a060",
+        "name": "UNTESTED!!",
+        "info": "Untested!!! http request inactivated.",
+        "x": 160,
+        "y": 1600,
+        "wires": []
+    },
+    {
+        "id": "969fc9550be16997",
+        "type": "comment",
+        "z": "39dba166d856a060",
+        "name": "Comm check functions",
+        "info": "",
+        "x": 150,
+        "y": 1760,
+        "wires": []
+    },
+    {
+        "id": "90b175c1541cb3d0",
+        "type": "http request",
+        "z": "39dba166d856a060",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": true,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 570,
+        "y": 1240,
+        "wires": [
+            [
+                "227b998844946394"
+            ]
+        ]
+    },
+    {
+        "id": "227b998844946394",
+        "type": "change",
+        "z": "39dba166d856a060",
+        "name": "store access_token",
+        "rules": [
+            {
+                "t": "set",
+                "p": "wallbox_data_retrieve_token",
+                "pt": "flow",
+                "to": "payload.access_token",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "wallbox_data_retrieve_token_date",
+                "pt": "flow",
+                "to": "",
+                "tot": "date"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 790,
+        "y": 1240,
+        "wires": [
+            [
+                "44fa2cd11a0bbd5a"
+            ]
+        ]
+    },
+    {
+        "id": "7e4c5f44ce8ec147",
+        "type": "comment",
+        "z": "39dba166d856a060",
+        "name": "UNTESTED!!",
+        "info": "Untested!!! http request inactivated.",
+        "x": 150,
+        "y": 1280,
+        "wires": []
+    },
+    {
+        "id": "604bec58b3df183d",
+        "type": "comment",
+        "z": "39dba166d856a060",
+        "name": "Read operating parameters",
+        "info": "",
+        "x": 190,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "9edd6c720ee82f74",
+        "type": "function",
+        "z": "39dba166d856a060",
+        "name": "prepare login",
+        "func": "msg.headers = {};\nmsg.headers = {\n    'Content-Type': 'application/x-www-form-urlencoded'\n};\nvar token_lifetime = 3600;\nvar timeDif = flow.get(\"wallbox_data_retrieve_token_date\") > 0 ? ((Date.now() - flow.get(\"wallbox_data_retrieve_token_date\")) / 1000).toFixed(0) : token_lifetime + 1;\n//msg.timeDif = timeDif;\nmsg.url = \"http://\" + flow.get(\"wallbox_data_hostname\") + \"/api/v1/token\"\nif (flow.get(\"wallbox_data_retrieve_token_date\") == undefined || timeDif > token_lifetime) //usually the token is valid for 1 hour. So after this time we will first retrieve a new one and continue then pulling the live data.\n{msg.payload = \n    \"grant_type=password&username=\"+flow.get(\"wallbox_data_username\")+\"&password=\"+flow.get(\"wallbox_data_password\")\n    return [msg, null];\n} else // the currently saved token is still valid so we will reuse this and can pull the live data directly\n{\n    return [null, msg];\n}\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 1240,
+        "wires": [
+            [
+                "90b175c1541cb3d0"
+            ],
+            [
+                "44fa2cd11a0bbd5a"
+            ]
+        ]
+    },
+    {
+        "id": "c59659314c404d49",
+        "type": "function",
+        "z": "39dba166d856a060",
+        "name": "prepare login",
+        "func": "msg.headers = {};\nmsg.headers = {\n    'Content-Type': 'application/x-www-form-urlencoded'\n};\nvar token_lifetime = 3600;\nvar timeDif = flow.get(\"wallbox_data_retrieve_token_date\") > 0 ? ((Date.now() - flow.get(\"wallbox_data_retrieve_token_date\")) / 1000).toFixed(0) : token_lifetime + 1;\n//msg.timeDif = timeDif;\nmsg.url = \"http://\" + flow.get(\"wallbox_data_hostname\") + \"/api/v1/token\"\nif (flow.get(\"wallbox_data_retrieve_token_date\") == undefined || timeDif > token_lifetime) //usually the token is valid for 1 hour. So after this time we will first retrieve a new one and continue then pulling the live data.\n{msg.payload = \n    \"grant_type=password&username=\"+flow.get(\"wallbox_data_username\")+\"&password=\"+flow.get(\"wallbox_data_password\")\n    return [msg, null];\n} else // the currently saved token is still valid so we will reuse this and can pull the live data directly\n{\n    return [null, msg];\n}\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 1400,
+        "wires": [
+            [
+                "680a999106e88e68"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "38ace5e4c89b1a74",
+        "type": "function",
+        "z": "39dba166d856a060",
+        "name": "prepare login",
+        "func": "msg.headers = {};\nmsg.headers = {\n    'Content-Type': 'application/x-www-form-urlencoded'\n};\nvar token_lifetime = 3600;\nvar timeDif = flow.get(\"wallbox_data_retrieve_token_date\") > 0 ? ((Date.now() - flow.get(\"wallbox_data_retrieve_token_date\")) / 1000).toFixed(0) : token_lifetime + 1;\n//msg.timeDif = timeDif;\nmsg.url = \"http://\" + flow.get(\"wallbox_data_hostname\") + \"/api/v1/token\"\nif (flow.get(\"wallbox_data_retrieve_token_date\") == undefined || timeDif > token_lifetime) //usually the token is valid for 1 hour. So after this time we will first retrieve a new one and continue then pulling the live data.\n{msg.payload = \n    \"grant_type=password&username=\"+flow.get(\"wallbox_data_username\")+\"&password=\"+flow.get(\"wallbox_data_password\")\n    return [msg, null];\n} else // the currently saved token is still valid so we will reuse this and can pull the live data directly\n{\n    return [null, msg];\n}\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 1560,
+        "wires": [
+            [
+                "3ef2ab643e192a28"
+            ],
+            [
+                "f8380f94f933d6f0"
+            ]
+        ]
+    },
+    {
+        "id": "8fa37d94bd163663",
+        "type": "http request",
+        "z": "39dba166d856a060",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": true,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 490,
+        "y": 760,
+        "wires": [
+            [
+                "0f61f0d98bceef46"
+            ]
+        ]
+    },
+    {
+        "id": "0f61f0d98bceef46",
+        "type": "change",
+        "z": "39dba166d856a060",
+        "name": "store access_token",
+        "rules": [
+            {
+                "t": "set",
+                "p": "wallbox_data_retrieve_token",
+                "pt": "flow",
+                "to": "payload.access_token",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "wallbox_data_retrieve_token_date",
+                "pt": "flow",
+                "to": "",
+                "tot": "date"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 730,
+        "y": 760,
+        "wires": [
+            [
+                "3b1df4e2e0e3a174"
+            ]
+        ]
+    },
+    {
+        "id": "24ce67e570c0cdee",
+        "type": "function",
+        "z": "39dba166d856a060",
+        "name": "prepare login",
+        "func": "msg.headers = {};\nmsg.headers = {\n    'Content-Type': 'application/x-www-form-urlencoded'\n};\nvar token_lifetime = 3600;\nvar timeDif = flow.get(\"wallbox_data_retrieve_token_date\") > 0 ? ((Date.now() - flow.get(\"wallbox_data_retrieve_token_date\")) / 1000).toFixed(0) : token_lifetime + 1;\n//msg.timeDif = timeDif;\nmsg.url = \"http://\" + flow.get(\"wallbox_data_hostname\") + \"/api/v1/token\"\nif (flow.get(\"wallbox_data_retrieve_token_date\") == undefined || timeDif > token_lifetime) //usually the token is valid for 1 hour. So after this time we will first retrieve a new one and continue then pulling the live data.\n{msg.payload = \n    \"grant_type=password&username=\"+flow.get(\"wallbox_data_username\")+\"&password=\"+flow.get(\"wallbox_data_password\")\n    return [msg, null];\n} else // the currently saved token is still valid so we will reuse this and can pull the live data directly\n{\n    return [null, msg];\n}\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 760,
+        "wires": [
+            [
+                "8fa37d94bd163663"
+            ],
+            [
+                "3b1df4e2e0e3a174"
+            ]
+        ]
+    }
+]
