@@ -7,40 +7,6 @@
         "info": ""
     },
     {
-        "id": "444818340485b09c",
-        "type": "change",
-        "z": "213e1ef044803d25",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "headers",
-                "pt": "msg",
-                "to": "{Content-Type: application/json\"}",
-                "tot": "str"
-            },
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "{\"right\": \"usr\", \"pass\": \"<password>\"}",
-                "tot": "str"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 240,
-        "y": 80,
-        "wires": [
-            [
-                "068b57b1a9d6556f"
-            ]
-        ]
-    },
-    {
         "id": "4524fdf6d53e6032",
         "type": "inject",
         "z": "213e1ef044803d25",
@@ -61,11 +27,12 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 130,
-        "y": 20,
+        "x": 140,
+        "y": 140,
         "wires": [
             [
-                "444818340485b09c"
+                "f15c2f4bf5a17036",
+                "8fe96fc74b0702b7"
             ]
         ]
     },
@@ -73,69 +40,11 @@
         "id": "068b57b1a9d6556f",
         "type": "http request",
         "z": "213e1ef044803d25",
-        "name": "http login",
+        "name": "http sma",
         "method": "POST",
         "ret": "obj",
         "paytoqs": "ignore",
-        "url": "https://sma<serialno>/dyn/login.json",
-        "tls": "d50d0c9f.31e858",
-        "persist": true,
-        "proxy": "",
-        "insecureHTTPParser": false,
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 360,
-        "y": 140,
-        "wires": [
-            [
-                "c901293f4b0ec08c"
-            ]
-        ]
-    },
-    {
-        "id": "1c6f03b753eef7f2",
-        "type": "change",
-        "z": "213e1ef044803d25",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "headers",
-                "pt": "msg",
-                "to": "{Content-Type: application/json\"}",
-                "tot": "str"
-            },
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "{}",
-                "tot": "str"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 250,
-        "y": 460,
-        "wires": [
-            [
-                "00dd32811113c211"
-            ]
-        ]
-    },
-    {
-        "id": "00dd32811113c211",
-        "type": "http request",
-        "z": "213e1ef044803d25",
-        "name": "http logout",
-        "method": "POST",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "https://sma<serialno>/dyn/logout.json?sid={{sid}}",
+        "url": "",
         "tls": "d50d0c9f.31e858",
         "persist": true,
         "proxy": "",
@@ -144,9 +53,11 @@
         "senderr": false,
         "headers": [],
         "x": 370,
-        "y": 560,
+        "y": 260,
         "wires": [
-            []
+            [
+                "c901293f4b0ec08c"
+            ]
         ]
     },
     {
@@ -159,46 +70,13 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 490,
-        "y": 200,
+        "x": 500,
+        "y": 320,
         "wires": [
             [
                 "f827066827ec0877",
-                "89422784b54c796d",
-                "9736a2fc01b56744"
+                "19f14fe0098875e0"
             ]
-        ]
-    },
-    {
-        "id": "89422784b54c796d",
-        "type": "change",
-        "z": "213e1ef044803d25",
-        "name": "defined keys",
-        "rules": [
-            {
-                "t": "set",
-                "p": "headers",
-                "pt": "msg",
-                "to": "{Content-Type: application/json\"}",
-                "tot": "str"
-            },
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "{\"destDev\": [], \"keys\": [\"6100_40463600\", \"6100_40463700\", \"6100_0046C200\", \"6100_00496900\", \"6100_00496A00\", \"6100_00295A00\", \"6400_00462400\", \"6400_00462500_0\",\"6380_40451F00\",\"6380_40251E00\",\"6380_40452100\",\"6400_0046C300\",\"6400_00496700\",\"6400_00496800\"]}",
-                "tot": "str"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 110,
-        "y": 260,
-        "wires": [
-            []
         ]
     },
     {
@@ -206,21 +84,23 @@
         "type": "function",
         "z": "213e1ef044803d25",
         "name": "Leistungswerte",
-        "func": "var meterOutW = msg.payload.result[\"01B8-xxxxx3B2\"][\"6100_40463600\"][\"9\"][0].val;\nvar meterInW = msg.payload.result[\"01B8-xxxxx3B2\"][\"6100_40463700\"][\"9\"][0].val;\nvar generatorW = msg.payload.result[\"01B8-xxxxx3B2\"][\"6100_0046C200\"][\"9\"][0].val;\nvar batchargeW = msg.payload.result[\"01B8-xxxxx3B2\"][\"6100_00496900\"][\"9\"][0].val;\nvar batdischargeW = msg.payload.result[\"01B8-xxxxx3B2\"][\"6100_00496A00\"][\"9\"][0].val;\nvar batSOC = msg.payload.result[\"01B8-xxxxx3B2\"][\"6100_00295A00\"][\"9\"][0].val;\nvar consumptW = 0;\nif (!(((meterOutW > 0) && (meterInW > 0)) || ((batdischargeW > 0) && (batchargeW > 0))))\n{\n    consumptW = generatorW + meterInW  + batdischargeW - meterOutW - batchargeW;\n}\n\nif (consumptW < 0)\n{\n   consumptW = 0; \n}\n\nmsg.payload = { meterInW, meterOutW, generatorW, batchargeW, batdischargeW, consumptW, batSOC};\nmsg.topic = \"power-stats\";\n\nreturn msg;",
+        "func": "var meterOutW = msg.payload.result[\"01B8-xxxxx3B2\"][\"6100_40463600\"][\"9\"][0].val;\nvar meterInW = msg.payload.result[\"01B8-xxxxx3B2\"][\"6100_40463700\"][\"9\"][0].val;\nvar generatorW = msg.payload.result[\"01B8-xxxxx3B2\"][\"6100_0046C200\"][\"9\"][0].val;\nvar inverterW = msg.payload.result[\"01B8-xxxxx3B2\"][\"6100_40263F00\"][\"9\"][0].val;\nvar batchargeW = msg.payload.result[\"01B8-xxxxx3B2\"][\"6100_00496900\"][\"9\"][0].val;\nvar batdischargeW = msg.payload.result[\"01B8-xxxxx3B2\"][\"6100_00496A00\"][\"9\"][0].val;\nvar batSOC = msg.payload.result[\"01B8-xxxxx3B2\"][\"6100_00295A00\"][\"9\"][0].val;\nif (generatorW < 0) {generatorW = 0}\nvar consumptW = 0;\nif (!(((meterOutW > 0) && (meterInW > 0)) || ((batdischargeW > 0) && (batchargeW > 0))))\n{\n    consumptW = generatorW + meterInW  + batdischargeW - meterOutW - batchargeW;\n}\n\nif (consumptW < 0)\n{\n   consumptW = 0; \n}\n\nmsg.payload = { meterInW, meterOutW, generatorW, batchargeW, batdischargeW, consumptW, batSOC, inverterW};\nmsg.topic = \"power-stats\";\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 680,
-        "y": 320,
+        "x": 690,
+        "y": 440,
         "wires": [
             [
                 "e1edfa9fc96eccbc",
                 "423f516fd94708a1",
                 "dddcda389d1ac5cb",
                 "9aec3264ca167cb5",
-                "8f055c24fbfccfb3"
+                "8f055c24fbfccfb3",
+                "d813fbb730aaac4b",
+                "783ca22963ce634b"
             ]
         ]
     },
@@ -237,8 +117,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 680,
-        "y": 460,
+        "x": 690,
+        "y": 580,
         "wires": []
     },
     {
@@ -252,8 +132,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 970,
-        "y": 320,
+        "x": 980,
+        "y": 440,
         "wires": [
             [
                 "b35234c906d3ca02"
@@ -271,8 +151,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 980,
-        "y": 540,
+        "x": 990,
+        "y": 660,
         "wires": [
             []
         ]
@@ -288,8 +168,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 980,
-        "y": 580,
+        "x": 990,
+        "y": 700,
         "wires": [
             []
         ]
@@ -306,8 +186,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 660,
-        "y": 200,
+        "x": 670,
+        "y": 320,
         "wires": []
     },
     {
@@ -326,16 +206,16 @@
         ],
         "repeat": "",
         "crontab": "",
-        "once": true,
+        "once": false,
         "onceDelay": 0.1,
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 120,
-        "y": 560,
+        "x": 150,
+        "y": 700,
         "wires": [
             [
-                "1c6f03b753eef7f2"
+                "524373b57b8c3a90"
             ]
         ]
     },
@@ -351,8 +231,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 540,
-        "y": 280,
+        "x": 550,
+        "y": 400,
         "wires": []
     },
     {
@@ -367,8 +247,8 @@
         "attributes": [],
         "inputOverride": "allow",
         "outputProperties": [],
-        "x": 1240,
-        "y": 260,
+        "x": 1250,
+        "y": 380,
         "wires": [
             []
         ]
@@ -385,8 +265,8 @@
         "attributes": [],
         "inputOverride": "allow",
         "outputProperties": [],
-        "x": 1140,
-        "y": 760,
+        "x": 1150,
+        "y": 880,
         "wires": [
             []
         ]
@@ -402,8 +282,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 990,
-        "y": 620,
+        "x": 1000,
+        "y": 740,
         "wires": [
             []
         ]
@@ -420,10 +300,10 @@
         "database": "database",
         "precisionV18FluxV20": "ms",
         "retentionPolicyV18Flux": "",
-        "org": "<organisation>",
+        "org": "ade3c88ba6f6690e",
         "bucket": "PV-Anlage",
-        "x": 1010,
-        "y": 680,
+        "x": 1020,
+        "y": 800,
         "wires": []
     },
     {
@@ -431,14 +311,14 @@
         "type": "function",
         "z": "213e1ef044803d25",
         "name": "Energiewerte",
-        "func": "//var priceIn = msg.payload.price\nvar exportedWh = msg.payload.result[\"01B8-xxxxx3B2\"][\"6400_00462400\"][\"9\"][0].val;\nvar importedWh = msg.payload.result[\"01B8-xxxxx3B2\"][\"6400_00462500\"][\"9\"][0].val;\nvar generatedWh = msg.payload.result[\"01B8-xxxxx3B2\"][\"6400_0046C300\"][\"9\"][0].val;\nvar batchargeWh = msg.payload.result[\"01B8-xxxxx3B2\"][\"6400_00496700\"][\"9\"][0].val;\nvar batdischargeWh = msg.payload.result[\"01B8-xxxxx3B2\"][\"6400_00496800\"][\"9\"][0].val;\nmsg.payload = { exportedWh, importedWh, generatedWh, batchargeWh, batdischargeWh};\nmsg.topic = \"energy-stats\";\nreturn msg;",
+        "func": "//var priceIn = msg.payload.price\nvar exportedWh = msg.payload.result[\"01B8-xxxxx3B2\"][\"6400_00462400\"][\"9\"][0].val;\nvar importedWh = msg.payload.result[\"01B8-xxxxx3B2\"][\"6400_00462500\"][\"9\"][0].val;\nvar generatedWh = msg.payload.result[\"01B8-xxxxx3B2\"][\"6400_0046C300\"][\"9\"][0].val;\nvar batchargeWh = msg.payload.result[\"01B8-xxxxx3B2\"][\"6400_00496700\"][\"9\"][0].val;\nvar batdischargeWh = msg.payload.result[\"01B8-xxxxx3B2\"][\"6400_00496800\"][\"9\"][0].val;\n//var priceIn = 0.25; //Einkauf kWh\n//var priceOut = 0.082 //Einspeisevergütung\nmsg.payload = { exportedWh, importedWh, generatedWh, batchargeWh, batdischargeWh};\nmsg.topic = \"energy-stats\";\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 570,
-        "y": 580,
+        "x": 580,
+        "y": 700,
         "wires": [
             [
                 "e5b7e150925150de"
@@ -457,8 +337,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 600,
-        "y": 700,
+        "x": 610,
+        "y": 820,
         "wires": []
     },
     {
@@ -487,8 +367,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 640,
-        "y": 640,
+        "x": 650,
+        "y": 760,
         "wires": [
             [
                 "3783ad129109a062",
@@ -510,8 +390,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 970,
-        "y": 260,
+        "x": 980,
+        "y": 380,
         "wires": [
             [
                 "09cd91f579ef1733"
@@ -529,8 +409,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 580,
-        "y": 760,
+        "x": 590,
+        "y": 880,
         "wires": [
             [
                 "76d17e15d627c0e9",
@@ -554,8 +434,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 840,
-        "y": 980,
+        "x": 850,
+        "y": 1100,
         "wires": []
     },
     {
@@ -569,8 +449,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 840,
-        "y": 760,
+        "x": 850,
+        "y": 880,
         "wires": [
             [
                 "250513e7808048c7"
@@ -589,8 +469,8 @@
         "attributes": [],
         "inputOverride": "allow",
         "outputProperties": [],
-        "x": 1230,
-        "y": 320,
+        "x": 1240,
+        "y": 440,
         "wires": [
             []
         ]
@@ -607,7 +487,7 @@
         "finalize": "",
         "libs": [],
         "x": 1000,
-        "y": 380,
+        "y": 540,
         "wires": [
             []
         ]
@@ -623,8 +503,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 840,
-        "y": 820,
+        "x": 850,
+        "y": 940,
         "wires": [
             [
                 "28d2b9a7267d4071"
@@ -643,8 +523,8 @@
         "attributes": [],
         "inputOverride": "allow",
         "outputProperties": [],
-        "x": 1140,
-        "y": 820,
+        "x": 1150,
+        "y": 940,
         "wires": [
             []
         ]
@@ -660,8 +540,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 840,
-        "y": 880,
+        "x": 850,
+        "y": 1000,
         "wires": [
             [
                 "fe5a37c8d932c86b"
@@ -680,8 +560,8 @@
         "attributes": [],
         "inputOverride": "allow",
         "outputProperties": [],
-        "x": 1130,
-        "y": 880,
+        "x": 1140,
+        "y": 1000,
         "wires": [
             []
         ]
@@ -697,8 +577,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 840,
-        "y": 920,
+        "x": 850,
+        "y": 1040,
         "wires": [
             [
                 "58d27b8f704a4368"
@@ -717,8 +597,8 @@
         "attributes": [],
         "inputOverride": "allow",
         "outputProperties": [],
-        "x": 1120,
-        "y": 940,
+        "x": 1130,
+        "y": 1060,
         "wires": [
             []
         ]
@@ -735,10 +615,10 @@
         "database": "database",
         "precisionV18FluxV20": "ms",
         "retentionPolicyV18Flux": "",
-        "org": "<organisation>",
+        "org": "ade3c88ba6f6690e",
         "bucket": "PV-Anlage",
-        "x": 1000,
-        "y": 460,
+        "x": 1010,
+        "y": 580,
         "wires": []
     },
     {
@@ -753,40 +633,99 @@
         "database": "database",
         "precisionV18FluxV20": "ms",
         "retentionPolicyV18Flux": "",
-        "org": "<organisation>",
+        "org": "ade3c88ba6f6690e",
         "bucket": "PV-Anlage",
-        "x": 900,
-        "y": 1040,
+        "x": 910,
+        "y": 1160,
         "wires": []
     },
     {
-        "id": "9736a2fc01b56744",
-        "type": "change",
+        "id": "f15c2f4bf5a17036",
+        "type": "link out",
         "z": "213e1ef044803d25",
-        "name": "All keys",
-        "rules": [
+        "name": "Trigger SMA readout",
+        "mode": "link",
+        "links": [
+            "b0f92e848e26cfd3"
+        ],
+        "x": 315,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "11d1af4a960b4565",
+        "type": "inject",
+        "z": "213e1ef044803d25",
+        "name": "initiate variables",
+        "props": [
             {
-                "t": "set",
-                "p": "headers",
-                "pt": "msg",
-                "to": "{Content-Type: application/json\"}",
-                "tot": "str"
-            },
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "{\"destDev\": []}",
-                "tot": "str"
+                "p": "payload"
             }
         ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
         "x": 140,
-        "y": 380,
+        "y": 60,
+        "wires": [
+            [
+                "ceee9447bb3a976e"
+            ]
+        ]
+    },
+    {
+        "id": "ceee9447bb3a976e",
+        "type": "function",
+        "z": "213e1ef044803d25",
+        "name": "define your credentials here",
+        "func": "//Note: your credential data is saved in plain text! So if you share this code you should double check that you removed your credentials from here.\n\nvar username=\"usr\"; //This the fixed username for the sma inverter api\nvar password =\"\"; //This is your individual password\nvar inverter_hostname=\"smaxxxxxx\"; //usually \"sma<serial number>\"\n\nflow.set(\"inverter_username\", username);\nflow.set(\"inverter_password\", password)\nflow.set(\"inverter_hostname\", inverter_hostname);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8fe96fc74b0702b7",
+        "type": "function",
+        "z": "213e1ef044803d25",
+        "name": "prepare login",
+        "func": "msg.headers = {};\nmsg.headers = {\n    'Content-Type': 'application/json'\n};\n//msg.payload = '{\"right\": \"usr\", \"pass\": \"' + flow.get(\"inverter_password\") + '\"}';\nmsg.payload = '{\"right\": \"' + flow.get(\"inverter_username\") + '\", \"pass\": \"' + flow.get(\"inverter_password\") + '\"}';\nmsg.url = \"https://\" + flow.get(\"inverter_hostname\") + \"/dyn/login.json\"\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 200,
+        "wires": [
+            [
+                "068b57b1a9d6556f"
+            ]
+        ]
+    },
+    {
+        "id": "19f14fe0098875e0",
+        "type": "function",
+        "z": "213e1ef044803d25",
+        "name": "prepare all keys",
+        "func": "msg.headers = {};\nmsg.headers = {\n    'Content-Type': 'application/json'\n};\nmsg.url = \"https://\" + flow.get(\"inverter_hostname\") + \"/dyn/getAllOnlValues.json?sid=\" + msg.sid\nmsg.payload = '{\"destDev\": []}'\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 160,
+        "y": 500,
         "wires": [
             [
                 "6f8c3274bc9917ad"
@@ -794,36 +733,14 @@
         ]
     },
     {
-        "id": "5a8e4c2e6a21bd4e",
-        "type": "http request",
-        "z": "213e1ef044803d25",
-        "name": "http defined keys",
-        "method": "POST",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "https://sma<serialno>/dyn/getValues.json?sid={{sid}}",
-        "tls": "d50d0c9f.31e858",
-        "persist": true,
-        "proxy": "",
-        "insecureHTTPParser": false,
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 290,
-        "y": 260,
-        "wires": [
-            []
-        ]
-    },
-    {
         "id": "6f8c3274bc9917ad",
         "type": "http request",
         "z": "213e1ef044803d25",
-        "name": "http all keys",
+        "name": "http sma",
         "method": "POST",
         "ret": "obj",
         "paytoqs": "ignore",
-        "url": "https://sma<serialno>/dyn/getAllOnlValues.json?sid={{sid}}",
+        "url": "",
         "tls": "d50d0c9f.31e858",
         "persist": true,
         "proxy": "",
@@ -832,15 +749,116 @@
         "senderr": false,
         "headers": [],
         "x": 350,
-        "y": 380,
+        "y": 500,
         "wires": [
             [
                 "2856280ada60a97d",
                 "ba0eee38f973d84b",
-                "1c6f03b753eef7f2",
                 "d057a85bbbef112e",
-                "96bd9f6eb48dc2f2"
+                "96bd9f6eb48dc2f2",
+                "524373b57b8c3a90"
             ]
+        ]
+    },
+    {
+        "id": "a59af560a771728a",
+        "type": "http request",
+        "z": "213e1ef044803d25",
+        "name": "http sma",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "d50d0c9f.31e858",
+        "persist": true,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 340,
+        "y": 620,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "524373b57b8c3a90",
+        "type": "function",
+        "z": "213e1ef044803d25",
+        "name": "prepare logout",
+        "func": "msg.headers = {};\nmsg.headers = {\n    'Content-Type': 'application/json'\n};\nmsg.payload = \"{\\\"right\\\":\\\"usr\\\",\\\"pass\\\":\" + \"\\\"\" + flow.get(\"inverter_password\") + \"\\\"\" + \"}\";\nmsg.url = \"https://\" + flow.get(\"inverter_hostname\") + \"/dyn/logout.json?sid=\" + msg.sid\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 160,
+        "y": 620,
+        "wires": [
+            [
+                "a59af560a771728a"
+            ]
+        ]
+    },
+    {
+        "id": "70c68937583c61c3",
+        "type": "function",
+        "z": "213e1ef044803d25",
+        "name": "prepare defined keys",
+        "func": "msg.headers = {};\nmsg.headers = {\n    'Content-Type': 'application/json'\n};\nmsg.url = \"https://\" + flow.get(\"inverter_hostname\") + \"/dyn/getValues.json?sid=\" + msg.sid\nconst sma_keys = [\n    \"6100_40463600\", \n    \"6100_40463700\", \n    \"6100_0046C200\", \n    \"6100_00496900\", \n    \"6100_00496A00\", \n    \"6100_00295A00\", \n    \"6400_00462400\", \n    \"6400_00462500_0\", \n    \"6380_40451F00\", \n    \"6380_40251E00\", \n    \"6380_40452100\", \n    \"6400_0046C300\", \n    \"6400_00496700\", \n    \"6400_00496800\"\n]\nvar result = '\"' + sma_keys[0] + '\"'\nfor (let i = 1; i < sma_keys.length; i++) {\n    result = result + ', \"' + sma_keys[i] + '\"'\n}\nmsg.payload = '{\"destDev\": [], \"keys\": [' + result + ']}'\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 160,
+        "y": 400,
+        "wires": [
+            [
+                "6f8c3274bc9917ad"
+            ]
+        ]
+    },
+    {
+        "id": "c3ff4c8ab3c0aac6",
+        "type": "comment",
+        "z": "213e1ef044803d25",
+        "name": "uncheck \"Verify server certificate\" in (empty) TLS config",
+        "info": "",
+        "x": 660,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "d813fbb730aaac4b",
+        "type": "link out",
+        "z": "213e1ef044803d25",
+        "name": "Power inverter",
+        "mode": "link",
+        "links": [
+            "0de0d489454a0677"
+        ],
+        "x": 975,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "783ca22963ce634b",
+        "type": "ha-sensor",
+        "z": "213e1ef044803d25",
+        "name": "WR AC power",
+        "entityConfig": "42cdb9d90eaf35a4",
+        "version": 0,
+        "state": "payload.inverterW",
+        "stateType": "msg",
+        "attributes": [],
+        "inputOverride": "allow",
+        "outputProperties": [],
+        "x": 1240,
+        "y": 500,
+        "wires": [
+            []
         ]
     },
     {
@@ -854,7 +872,8 @@
         "keyname": "",
         "caname": "",
         "servername": "",
-        "verifyservercert": false
+        "verifyservercert": false,
+        "alpnprotocol": ""
     },
     {
         "id": "d3ef125642c94d51",
@@ -949,7 +968,7 @@
         "usetls": false,
         "tls": "d50d0c9f.31e858",
         "influxdbVersion": "2.0",
-        "url": "http://192.168.X.X:8086",
+        "url": "http://192.168.1.49:8086",
         "rejectUnauthorized": true
     },
     {
@@ -1111,6 +1130,47 @@
             {
                 "property": "state_class",
                 "value": ""
+            }
+        ],
+        "resend": false,
+        "debugEnabled": false
+    },
+    {
+        "id": "42cdb9d90eaf35a4",
+        "type": "ha-entity-config",
+        "server": "73f91ee1819febd9",
+        "deviceConfig": "",
+        "name": "",
+        "version": "6",
+        "entityType": "sensor",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": "WRpowerAC"
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "entity_category",
+                "value": "config"
+            },
+            {
+                "property": "entity_picture",
+                "value": ""
+            },
+            {
+                "property": "device_class",
+                "value": "power"
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "W"
+            },
+            {
+                "property": "state_class",
+                "value": "measurement"
             }
         ],
         "resend": false,
