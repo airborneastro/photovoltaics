@@ -4,17 +4,18 @@ https://haus-automatisierung.com/software/2023/05/11/influxdb2-pv-dashboard.html
 bucket PV-Anlage
 
 measurement power-stats (unit: Watt)
-
+fields:
 meterInW        Leistung Bezug              imported power
 meterOutW       Leistung Einspeisung        exported power
-generatorW      Leistung PV-Erzeugung       generated power
+generatorW      Leistung PV-Erzeugung       solar generated power
 batchargeW      Leistung Batterieladung     battery charging power
 batdischargeW   Leistung Batterieentladung  battery discharge power
 consumptW = generatorW + meterInW  + batdischargeW - meterOutW - batchargeW
                 Hausverbrauch               consumed power
+inverterW       AC Leistung Wechselrichter  inverter grid power                  
                 
 measurement energy-stats (unit: Wh)
-
+fields:
 importedWh      Energie Bezug               imported energy
 exportedWh      Energie Einspeisung         exported energy
 generatedWh     Energie Erzeugung           generated energy
@@ -25,7 +26,7 @@ priceIn (€)     Stromkosten Einkauf/kWh     purchase cost per kWh
 priceOut (€)    Einspeisevergütung/kWh      feed-in tariff per kWh
 
 measurement: pv-stats 
-
+fields:
 voltageA        DC-Spannung string A (V)    DC voltage string A (V)
 voltageB        DC-Spannung string B (V)    DC voltage string B (V)
 currentA        DC-Strom string A (A)       DC current string A (A)
