@@ -84,7 +84,7 @@
         "type": "function",
         "z": "213e1ef044803d25",
         "name": "Leistungswerte",
-        "func": "var meterOutW = msg.payload.result[\"01B8-xxxxx3B2\"][\"6100_40463600\"][\"9\"][0].val;\nvar meterInW = msg.payload.result[\"01B8-xxxxx3B2\"][\"6100_40463700\"][\"9\"][0].val;\nvar generatorW = msg.payload.result[\"01B8-xxxxx3B2\"][\"6100_0046C200\"][\"9\"][0].val;\nvar inverterW = msg.payload.result[\"01B8-xxxxx3B2\"][\"6100_40263F00\"][\"9\"][0].val;\nvar batchargeW = msg.payload.result[\"01B8-xxxxx3B2\"][\"6100_00496900\"][\"9\"][0].val;\nvar batdischargeW = msg.payload.result[\"01B8-xxxxx3B2\"][\"6100_00496A00\"][\"9\"][0].val;\nvar batSOC = msg.payload.result[\"01B8-xxxxx3B2\"][\"6100_00295A00\"][\"9\"][0].val;\nif (generatorW < 0) {generatorW = 0}\nvar consumptW = 0;\nif (!(((meterOutW > 0) && (meterInW > 0)) || ((batdischargeW > 0) && (batchargeW > 0))))\n{\n    consumptW = generatorW + meterInW  + batdischargeW - meterOutW - batchargeW;\n}\n\nif (consumptW < 0)\n{\n   consumptW = 0; \n}\n\nmsg.payload = { meterInW, meterOutW, generatorW, batchargeW, batdischargeW, consumptW, batSOC, inverterW};\nmsg.topic = \"power-stats\";\n\nreturn msg;",
+        "func": "var key = Object.keys(msg.payload.result)[0];\nvar meterOutW = msg.payload.result[key][\"6100_40463600\"][\"9\"][0].val;\nvar meterInW = msg.payload.result[key][\"6100_40463700\"][\"9\"][0].val;\nvar generatorW = msg.payload.result[key][\"6100_0046C200\"][\"9\"][0].val;\nvar inverterW = msg.payload.result[key][\"6100_40263F00\"][\"9\"][0].val;\nvar batchargeW = msg.payload.result[key][\"6100_00496900\"][\"9\"][0].val;\nvar batdischargeW = msg.payload.result[key][\"6100_00496A00\"][\"9\"][0].val;\nvar batSOC = msg.payload.result[key][\"6100_00295A00\"][\"9\"][0].val;\nif (generatorW < 0) {generatorW = 0}\nvar consumptW = 0;\nif (!(((meterOutW > 0) && (meterInW > 0)) || ((batdischargeW > 0) && (batchargeW > 0))))\n{\n    consumptW = generatorW + meterInW  + batdischargeW - meterOutW - batchargeW;\n}\n\nif (consumptW < 0)\n{\n   consumptW = 0; \n}\n\nmsg.payload = { meterInW, meterOutW, generatorW, batchargeW, batdischargeW, consumptW, batSOC, inverterW};\nmsg.topic = \"power-stats\";\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -228,7 +228,8 @@
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "false",
+        "complete": "payload",
+        "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
         "x": 550,
@@ -311,7 +312,7 @@
         "type": "function",
         "z": "213e1ef044803d25",
         "name": "Energiewerte",
-        "func": "//var priceIn = msg.payload.price\nvar exportedWh = msg.payload.result[\"01B8-xxxxx3B2\"][\"6400_00462400\"][\"9\"][0].val;\nvar importedWh = msg.payload.result[\"01B8-xxxxx3B2\"][\"6400_00462500\"][\"9\"][0].val;\nvar generatedWh = msg.payload.result[\"01B8-xxxxx3B2\"][\"6400_0046C300\"][\"9\"][0].val;\nvar batchargeWh = msg.payload.result[\"01B8-xxxxx3B2\"][\"6400_00496700\"][\"9\"][0].val;\nvar batdischargeWh = msg.payload.result[\"01B8-xxxxx3B2\"][\"6400_00496800\"][\"9\"][0].val;\n//var priceIn = 0.25; //Einkauf kWh\n//var priceOut = 0.082 //Einspeisevergütung\nmsg.payload = { exportedWh, importedWh, generatedWh, batchargeWh, batdischargeWh};\nmsg.topic = \"energy-stats\";\nreturn msg;",
+        "func": "//var priceIn = msg.payload.price\nvar key = Object.keys(msg.payload.result)[0];\nvar exportedWh = msg.payload.result[key][\"6400_00462400\"][\"9\"][0].val;\nvar importedWh = msg.payload.result[key][\"6400_00462500\"][\"9\"][0].val;\nvar generatedWh = msg.payload.result[key][\"6400_0046C300\"][\"9\"][0].val;\nvar batchargeWh = msg.payload.result[key][\"6400_00496700\"][\"9\"][0].val;\nvar batdischargeWh = msg.payload.result[key][\"6400_00496800\"][\"9\"][0].val;\n//var priceIn = 0.25; //Einkauf kWh\n//var priceOut = 0.082 //Einspeisevergütung\nmsg.payload = { exportedWh, importedWh, generatedWh, batchargeWh, batdischargeWh};\nmsg.topic = \"energy-stats\";\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -403,7 +404,7 @@
         "type": "function",
         "z": "213e1ef044803d25",
         "name": "DC Messungen",
-        "func": "var voltageA = msg.payload.result[\"01B8-xxxxx3B2\"][\"6380_40451F00\"][\"1\"][0].val/100;\nvar voltageB = msg.payload.result[\"01B8-xxxxx3B2\"][\"6380_40451F00\"][\"1\"][1].val/100;\nvar powerA = msg.payload.result[\"01B8-xxxxx3B2\"][\"6380_40251E00\"][\"1\"][0].val;\nvar powerB = msg.payload.result[\"01B8-xxxxx3B2\"][\"6380_40251E00\"][\"1\"][1].val;\nvar currentA = msg.payload.result[\"01B8-xxxxx3B2\"][\"6380_40452100\"][\"1\"][0].val/1000;\nvar currentB = msg.payload.result[\"01B8-xxxxx3B2\"][\"6380_40452100\"][\"1\"][1].val/1000;\nvar reactiveP_L1 = msg.payload.result[\"01B8-xxxxx3B2\"][\"6100_40466C00\"][\"9\"][0].val;\nmsg.payload = { voltageA, voltageB, powerA, powerB, currentA, currentB, reactiveP_L1};\nmsg.topic = \"PV_stats\";\nreturn msg;",
+        "func": "var key = Object.keys(msg.payload.result)[0];\nvar voltageA = msg.payload.result[key][\"6380_40451F00\"][\"1\"][0].val/100;\nvar voltageB = msg.payload.result[key][\"6380_40451F00\"][\"1\"][1].val/100;\nvar powerA = msg.payload.result[key][\"6380_40251E00\"][\"1\"][0].val;\nvar powerB = msg.payload.result[key][\"6380_40251E00\"][\"1\"][1].val;\nvar currentA = msg.payload.result[key][\"6380_40452100\"][\"1\"][0].val/1000;\nvar currentB = msg.payload.result[key][\"6380_40452100\"][\"1\"][1].val/1000;\nvar reactiveP_L1 = msg.payload.result[key][\"6100_40466C00\"][\"9\"][0].val;\nmsg.payload = { voltageA, voltageB, powerA, powerB, currentA, currentB, reactiveP_L1};\nmsg.topic = \"PV_stats\";\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -682,7 +683,7 @@
         "type": "function",
         "z": "213e1ef044803d25",
         "name": "define your credentials here",
-        "func": "//Note: your credential data is saved in plain text! So if you share this code you should double check that you removed your credentials from here.\n\nvar username=\"usr\"; //This the fixed username for the sma inverter api\nvar password =\"\"; //This is your individual password\nvar inverter_hostname=\"smaxxxxxx\"; //usually \"sma<serial number>\"\n\nflow.set(\"inverter_username\", username);\nflow.set(\"inverter_password\", password)\nflow.set(\"inverter_hostname\", inverter_hostname);\n\nreturn msg;",
+        "func": "//Note: your credential data is saved in plain text! So if you share this code you should double check that you removed your credentials from here.\n\nvar username = \"usr\"; //This the fixed username for the sma inverter api\nvar password = \"\"; //This is your individual password\nvar inverter_hostname = \"sma12345678\"; //usually \"sma<serial number>\"\n\nflow.set(\"inverter_username\", username);\nflow.set(\"inverter_password\", password)\nflow.set(\"inverter_hostname\", inverter_hostname);\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -753,10 +754,10 @@
         "wires": [
             [
                 "2856280ada60a97d",
-                "ba0eee38f973d84b",
                 "d057a85bbbef112e",
                 "96bd9f6eb48dc2f2",
-                "524373b57b8c3a90"
+                "524373b57b8c3a90",
+                "ba0eee38f973d84b"
             ]
         ]
     },
