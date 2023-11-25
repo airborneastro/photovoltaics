@@ -25,9 +25,9 @@
         "name": "BYD Battery",
         "server": "192.168.1.82",
         "port": "8080",
-        "out": "time",
+        "out": "count",
         "ret": "buffer",
-        "splitc": "100",
+        "splitc": "55",
         "newline": "",
         "trim": false,
         "tls": "",
@@ -394,9 +394,9 @@
         "name": "BYD Battery",
         "server": "192.168.1.82",
         "port": "8080",
-        "out": "time",
+        "out": "count",
         "ret": "buffer",
-        "splitc": "100",
+        "splitc": "207",
         "newline": "",
         "trim": false,
         "tls": "",
@@ -529,7 +529,7 @@
         "id": "d3e243abacb391a0",
         "type": "inject",
         "z": "82c27bbba924f8af",
-        "name": "Cells info",
+        "name": "Cells info stack 1",
         "props": [
             {
                 "p": "payload"
@@ -544,8 +544,8 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "payload": "",
-        "payloadType": "date",
+        "payload": "turm1",
+        "payloadType": "str",
         "x": 140,
         "y": 320,
         "wires": [
@@ -559,7 +559,7 @@
         "type": "function",
         "z": "82c27bbba924f8af",
         "name": "packet 3",
-        "func": "msg.payload = Buffer.from(\"0110055000020400018100f853\", \"hex\");\nreturn msg;",
+        "func": "if (msg.payload == \"turm1\") {\n    msg.payload = Buffer.from(\"0110055000020400018100f853\", \"hex\");\n} \nelse {\n    msg.payload = Buffer.from(\"01100550000204000281000853\", \"hex\");\n}\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -761,9 +761,9 @@
         "name": "BYD Battery",
         "server": "192.168.1.82",
         "port": "8080",
-        "out": "time",
+        "out": "count",
         "ret": "buffer",
-        "splitc": "100",
+        "splitc": "11",
         "newline": "",
         "trim": false,
         "tls": "",
@@ -1347,7 +1347,7 @@
         "name": "README, be warned",
         "info": "\"General Batt info\" has to run once before reading cells data.\nIt is unclear if calling \"Cells info\" too often causes harm.\nYou are on your own risk!\nGeneral Batt info could probably polled regularly",
         "x": 140,
-        "y": 280,
+        "y": 260,
         "wires": []
     },
     {
@@ -1746,12 +1746,12 @@
             {
                 "t": "eq",
                 "v": "0",
-                "vt": "num"
+                "vt": "str"
             },
             {
-                "t": "gt",
+                "t": "neq",
                 "v": "0",
-                "vt": "num"
+                "vt": "str"
             }
         ],
         "checkall": "true",
@@ -1798,6 +1798,35 @@
             ],
             [
                 "d059a48b43767c7c"
+            ]
+        ]
+    },
+    {
+        "id": "735efb4294cfcbf4",
+        "type": "inject",
+        "z": "82c27bbba924f8af",
+        "name": "Cells info stack 2",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "turm2",
+        "payloadType": "str",
+        "x": 140,
+        "y": 360,
+        "wires": [
+            [
+                "06072ae38d2a5c80"
             ]
         ]
     }
