@@ -1,5 +1,13 @@
 [
     {
+        "id": "82c27bbba924f8af",
+        "type": "tab",
+        "label": "BYD readout",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "c1bf54aba015a59c",
         "type": "function",
         "z": "82c27bbba924f8af",
@@ -348,12 +356,21 @@
             },
             {
                 "type": "uint8",
+                "name": "hvsTowers",
+                "offset": 36,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "0.0625",
+                "mask": "0xF0"
+            },
+            {
+                "type": "uint8",
                 "name": "hvsModules",
                 "offset": 36,
                 "length": 1,
                 "offsetbit": 0,
                 "scale": "1",
-                "mask": ""
+                "mask": "0x0F"
             },
             {
                 "type": "uint8",
@@ -430,7 +447,7 @@
         "type": "function",
         "z": "82c27bbba924f8af",
         "name": "process P0",
-        "func": "msg.payload.hvsBMUA = \"V\" + msg.payload.hvsBMUA_u.toString() + \".\" + msg.payload.hvsBMUA_l.toString();\nmsg.payload.hvsBMUB = \"V\" + msg.payload.hvsBMUB_u.toString() + \".\" + msg.payload.hvsBMUB_l.toString();\nmsg.payload.hvsBMS = \"V\" + msg.payload.hvsBMS_u.toString() + \".\" + msg.payload.hvsBMS_l.toString(); \nmsg.payload.hvsModules = (msg.payload.hvsModules -16);\nflow.set(\"hvsModules\", msg.payload.hvsModules);\nswitch  (msg.payload.hvsGrid)\n{\n    case 0:\n        msg.payload.hvsGrid = \"OffGrid\"\n        break;\n    case 1:\n        msg.payload.hvsGrid = \"OnGrid\"\n        break;\n    case 2:\n        msg.payload.hvsGrid = \"OffGrid\"\n}\nflow.set(\"hvsBattType_fromSerial\", msg.payload.hvsBattType_fromSerial);\n \nreturn msg;",
+        "func": "msg.payload.hvsBMUA = \"V\" + msg.payload.hvsBMUA_u.toString() + \".\" + msg.payload.hvsBMUA_l.toString();\nmsg.payload.hvsBMUB = \"V\" + msg.payload.hvsBMUB_u.toString() + \".\" + msg.payload.hvsBMUB_l.toString();\nmsg.payload.hvsBMS = \"V\" + msg.payload.hvsBMS_u.toString() + \".\" + msg.payload.hvsBMS_l.toString(); \nmsg.payload.hvsModules = (msg.payload.hvsModules);\nflow.set(\"hvsModules\", msg.payload.hvsModules);\nswitch  (msg.payload.hvsGrid)\n{\n    case 0:\n        msg.payload.hvsGrid = \"OffGrid\"\n        break;\n    case 1:\n        msg.payload.hvsGrid = \"OnGrid\"\n        break;\n    case 2:\n        msg.payload.hvsGrid = \"OffGrid\"\n}\nflow.set(\"hvsBattType_fromSerial\", msg.payload.hvsBattType_fromSerial);\n \nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1802,6 +1819,609 @@
         ]
     },
     {
+        "id": "f789cf254216b8d1",
+        "type": "function",
+        "z": "82c27bbba924f8af",
+        "name": "packet 1",
+        "func": "msg.payload = Buffer.from(\"01030500001984cc\", \"hex\");\nmsg.host = flow.get(\"BYD_IP\")\nmsg.port = flow.get(\"BYD_Port\")\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 1340,
+        "wires": [
+            [
+                "652654275fdd6cc1"
+            ]
+        ]
+    },
+    {
+        "id": "652654275fdd6cc1",
+        "type": "tcp request",
+        "z": "82c27bbba924f8af",
+        "name": "BYD Battery",
+        "server": "",
+        "port": "",
+        "out": "count",
+        "ret": "buffer",
+        "splitc": "55",
+        "newline": "",
+        "trim": false,
+        "tls": "",
+        "x": 490,
+        "y": 1340,
+        "wires": [
+            [
+                "41ced8af9716a513"
+            ]
+        ]
+    },
+    {
+        "id": "41ced8af9716a513",
+        "type": "buffer-parser",
+        "z": "82c27bbba924f8af",
+        "name": "parse P1",
+        "data": "payload",
+        "dataType": "msg",
+        "specification": "spec",
+        "specificationType": "ui",
+        "items": [
+            {
+                "type": "int16be",
+                "name": "hvsSOC",
+                "offset": 3,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "int16be",
+                "name": "hvsMaxVolt",
+                "offset": 5,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "0.01",
+                "mask": ""
+            },
+            {
+                "type": "int16be",
+                "name": "hvsMinVolt",
+                "offset": 7,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "0.01",
+                "mask": ""
+            },
+            {
+                "type": "int16be",
+                "name": "hvsSOH",
+                "offset": 9,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "int16be",
+                "name": "hvsCurrent",
+                "offset": 11,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "0.100",
+                "mask": ""
+            },
+            {
+                "type": "uint16be",
+                "name": "hvsBattVolt",
+                "offset": 13,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "0.01",
+                "mask": ""
+            },
+            {
+                "type": "int16be",
+                "name": "hvsMaxTemp",
+                "offset": 15,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "int16be",
+                "name": "hvsMinTemp",
+                "offset": 17,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "int16be",
+                "name": "hvsBatTemp",
+                "offset": 19,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "int16be",
+                "name": "hvsError",
+                "offset": 29,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "string",
+                "name": "hvsParamT",
+                "offset": 31,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "0.01",
+                "mask": ""
+            },
+            {
+                "type": "uint16be",
+                "name": "hvsOutVolt",
+                "offset": 35,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "0.01",
+                "mask": ""
+            }
+        ],
+        "swap1": "",
+        "swap2": "",
+        "swap3": "",
+        "swap1Type": "swap",
+        "swap2Type": "swap",
+        "swap3Type": "swap",
+        "msgProperty": "payload",
+        "msgPropertyType": "str",
+        "resultType": "keyvalue",
+        "resultTypeType": "return",
+        "multipleResult": false,
+        "fanOutMultipleResult": false,
+        "setTopic": true,
+        "outputs": 1,
+        "x": 680,
+        "y": 1340,
+        "wires": [
+            [
+                "5b53d3d21a6f9b40"
+            ]
+        ]
+    },
+    {
+        "id": "5b53d3d21a6f9b40",
+        "type": "function",
+        "z": "82c27bbba924f8af",
+        "name": "process P1",
+        "func": "msg.payload.hvsPower = Math.round((msg.payload.hvsCurrent * msg.payload.hvsOutVolt)* 100) / 100.0;\nmsg.payload.hvsDiffVolt = Math.round((msg.payload.hvsMaxVolt - msg.payload.hvsMinVolt) * 100) / 100;\nmsg.payload.hvsCurrent = (Math.round(msg.payload.hvsCurrent  * 100) / 100.0);\nconst myErrors = [\n    \"High Temperature Charging (Cells)\",\n    \"Low Temperature Charging (Cells)\",\n    \"Over Current Discharging\",\n    \"Over Current Charging\",\n    \"Main circuit Failure\",\n    \"Short Current Alarm\",\n    \"Cells Imbalance\",\n    \"Current Sensor Failure\",\n    \"Battery Over Voltage\",\n    \"Battery Under Voltage\",\n    \"Cell Over Voltage\",\n    \"Cell Under Voltage\",\n    \"Voltage Sensor Failure\",\n    \"Temperature Sensor Failure\",\n    \"High Temperature Discharging (Cells)\",\n    \"Low Temperature Discharging (Cells)\"\n];\nvar hvsErrorString = \"\";\n//        hvsError = 65535;\nfor (let j = 0; j < 16; j++) {\n    if (((1 << j) & msg.payload.hvsError) !== 0) {\n        if (hvsErrorString.length > 0) {\n            hvsErrorString += \"; \";\n        }\n        hvsErrorString += myErrors[j];\n    }\n}\nif (hvsErrorString.length === 0) { hvsErrorString = \"no Error\"; }\nmsg.payload.hvsErrorString = hvsErrorString;\n\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 1340,
+        "wires": [
+            [
+                "df2a205c1241ab6b",
+                "ab1f419ae2852b66",
+                "e4453df6292e60f9"
+            ]
+        ]
+    },
+    {
+        "id": "ad26a8f185abbf70",
+        "type": "ui_chart",
+        "z": "82c27bbba924f8af",
+        "name": "Min Max Volt",
+        "group": "6edcf19c98e2343e",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "label": "Minimum Cell Voltage, Maximum Cell Voltage",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "bezier",
+        "nodata": "",
+        "dot": false,
+        "ymin": "3.2",
+        "ymax": "3.65",
+        "removeOlder": "4",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#ff0000",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1270,
+        "y": 1340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "df2a205c1241ab6b",
+        "type": "function",
+        "z": "82c27bbba924f8af",
+        "name": "function 2",
+        "func": "var msg1= {};\nvar msg2 = {};\n/*msg1.topic = \"MinVolt\" \nmsg1.payload = msg.payload.hvsMinVolt;\nmsg2.topic= \"MaxVolt\";\nmsg2.payload= msg.payload.hvsMaxVolt;\n*/\nmsg1 = { topic: \"MinVolt\", payload: msg.payload.hvsMinVolt}\nmsg2 = { topic: \"MaxVolt\", payload: msg.payload.hvsMaxVolt }\nmsg = [msg1,msg2]\nreturn msg;",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 1340,
+        "wires": [
+            [
+                "ad26a8f185abbf70"
+            ],
+            [
+                "ad26a8f185abbf70"
+            ]
+        ]
+    },
+    {
+        "id": "d3d8c121b1304e13",
+        "type": "inject",
+        "z": "82c27bbba924f8af",
+        "name": "General Batt info",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 1340,
+        "wires": [
+            [
+                "f789cf254216b8d1"
+            ]
+        ]
+    },
+    {
+        "id": "ab1f419ae2852b66",
+        "type": "debug",
+        "z": "82c27bbba924f8af",
+        "name": "debug 30",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1060,
+        "y": 1400,
+        "wires": []
+    },
+    {
+        "id": "e4453df6292e60f9",
+        "type": "function",
+        "z": "82c27bbba924f8af",
+        "name": "function 3",
+        "func": "var msg1= {};\nvar msg2 = {};\nvar msg3 = {};\nvar msg4 = {};\nvar bydbatchargeW = 0;\nvar bydbatdischargeW = 0;\n\nflow.set(\"BYD_Power\", msg.payload.hvsPower )\nmsg1 = { topic: \"Battery power BYD\", payload: msg.payload.hvsPower}\nmsg2 = { topic: \"Battery power SMA\", payload: flow.get(\"Power_SMA\") }\nmsg3 = { topic: \"AC power SMA\", payload: flow.get(\"AC_power_SMA\")}\nmsg4.topic = \"power-stats\"\n\nif (msg.payload.hvsPower > 0)\n{\n    bydbatchargeW = 0;\n    bydbatdischargeW = msg.payload.hvsPower\n}\nelse{\n    bydbatchargeW = msg.payload.hvsPower * -1.0\n    bydbatdischargeW = 0;\n}\nmsg4.payload = {bydbatchargeW,bydbatdischargeW}\nmsg = [msg1,msg2,msg3,msg4]\nreturn msg;",
+        "outputs": 4,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 1460,
+        "wires": [
+            [
+                "e873895a57452637",
+                "3c3322892b1be3ca"
+            ],
+            [
+                "e873895a57452637",
+                "3c3322892b1be3ca"
+            ],
+            [
+                "3c3322892b1be3ca"
+            ],
+            [
+                "01c8d7abb60e5aba",
+                "d1fee9cd64f34271"
+            ]
+        ]
+    },
+    {
+        "id": "44f1c4c24d9a896b",
+        "type": "delay",
+        "z": "82c27bbba924f8af",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "10",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": true,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 410,
+        "y": 1260,
+        "wires": [
+            [
+                "f789cf254216b8d1"
+            ]
+        ]
+    },
+    {
+        "id": "b0f92e848e26cfd3",
+        "type": "link in",
+        "z": "82c27bbba924f8af",
+        "name": "link from SMA trigger",
+        "links": [
+            "f15c2f4bf5a17036"
+        ],
+        "x": 195,
+        "y": 1260,
+        "wires": [
+            [
+                "44f1c4c24d9a896b"
+            ]
+        ]
+    },
+    {
+        "id": "0de0d489454a0677",
+        "type": "link in",
+        "z": "82c27bbba924f8af",
+        "name": "link in 2",
+        "links": [
+            "d813fbb730aaac4b"
+        ],
+        "x": 705,
+        "y": 1640,
+        "wires": [
+            [
+                "4a29501d6eb73300"
+            ]
+        ]
+    },
+    {
+        "id": "e873895a57452637",
+        "type": "debug",
+        "z": "82c27bbba924f8af",
+        "name": "debug 57",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1280,
+        "y": 1540,
+        "wires": []
+    },
+    {
+        "id": "183187e8a86ec9a6",
+        "type": "function",
+        "z": "82c27bbba924f8af",
+        "name": "function 16",
+        "func": "flow.set(\"Power_SMA\", msg.payload.batdischargeW - msg.payload.batchargeW)\nflow.set(\"AC_power_SMA\",msg.payload.inverterW)\nmsg.payload = (msg.payload.batdischargeW - msg.payload.batchargeW) - flow.get(\"BYD_Power\")\nmsg.topic = \"power difference\"\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1070,
+        "y": 1640,
+        "wires": [
+            [
+                "4940225a74755d77",
+                "1034ae8b63ca4697"
+            ]
+        ]
+    },
+    {
+        "id": "1034ae8b63ca4697",
+        "type": "ui_chart",
+        "z": "82c27bbba924f8af",
+        "name": "Power difference SMA-BYD",
+        "group": "6edcf19c98e2343e",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "label": "Battery power difference SMA-BYD",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "bezier",
+        "nodata": "",
+        "dot": false,
+        "ymin": "-200",
+        "ymax": "200",
+        "removeOlder": "4",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#ff0000",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1320,
+        "y": 1640,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4940225a74755d77",
+        "type": "debug",
+        "z": "82c27bbba924f8af",
+        "name": "debug 58",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1260,
+        "y": 1700,
+        "wires": []
+    },
+    {
+        "id": "4a29501d6eb73300",
+        "type": "delay",
+        "z": "82c27bbba924f8af",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "10",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": true,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 870,
+        "y": 1640,
+        "wires": [
+            [
+                "183187e8a86ec9a6"
+            ]
+        ]
+    },
+    {
+        "id": "3c3322892b1be3ca",
+        "type": "ui_chart",
+        "z": "82c27bbba924f8af",
+        "name": "Battery power",
+        "group": "6edcf19c98e2343e",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "Battery power",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "4",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#ff0000",
+            "#00ff00",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1320,
+        "y": 1460,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "01c8d7abb60e5aba",
+        "type": "debug",
+        "z": "82c27bbba924f8af",
+        "name": "debug 61",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1080,
+        "y": 1560,
+        "wires": []
+    },
+    {
+        "id": "d1fee9cd64f34271",
+        "type": "influxdb out",
+        "z": "82c27bbba924f8af",
+        "influxdb": "1ab063217b34dd11",
+        "name": "PV_Anlage Leistungs",
+        "measurement": "power-stats",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "ade3c88ba6f6690e",
+        "bucket": "PV-Anlage",
+        "x": 1320,
+        "y": 1580,
+        "wires": []
+    },
+    {
         "id": "735efb4294cfcbf4",
         "type": "inject",
         "z": "82c27bbba924f8af",
@@ -1900,5 +2520,71 @@
                 "06072ae38d2a5c80"
             ]
         ]
+    },
+    {
+        "id": "b32393d064601f44",
+        "type": "ui_spacer",
+        "z": "82c27bbba924f8af",
+        "name": "spacer",
+        "group": "6edcf19c98e2343e",
+        "order": 4,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "1e36ce99e1747de9",
+        "type": "ui_spacer",
+        "z": "82c27bbba924f8af",
+        "name": "spacer",
+        "group": "6edcf19c98e2343e",
+        "order": 2,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "6edcf19c98e2343e",
+        "type": "ui_group",
+        "name": "Photovoltaik",
+        "tab": "319b6e6c8be4fe25",
+        "order": 1,
+        "disp": true,
+        "width": "14",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "1ab063217b34dd11",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "database",
+        "name": "Influxdb2_PV",
+        "usetls": false,
+        "tls": "d50d0c9f.31e858",
+        "influxdbVersion": "2.0",
+        "url": "http://192.168.1.49:8086",
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "319b6e6c8be4fe25",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "order": ""
+    },
+    {
+        "id": "d50d0c9f.31e858",
+        "type": "tls-config",
+        "name": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "",
+        "keyname": "",
+        "caname": "",
+        "servername": "",
+        "verifyservercert": false,
+        "alpnprotocol": ""
     }
 ]
