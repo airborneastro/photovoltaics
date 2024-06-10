@@ -38,6 +38,8 @@ I added a node-RED flow to directly  [readout a BYD](https://github.com/airborne
 
 I also added a node-RED flow to read and operate the SMA EV charger ("wallbox"). Mostly adapted/simplified code from [here](https://homematic-forum.de/forum/viewtopic.php?f=18&t=72536&sid=5cbddf649a40e787d9da95c92fee1a37) and [here](https://github.com/Nerdiyde/NodeRedSnippets/tree/master/snippets/sma_devices). Note that the charging (parameter setting) functions have NOT been tested!
 
+Another node red flow for a simple [battery control](https://github.com/airborneastro/photovoltaics/blob/main/battcharge.json) was added to e.g. limit the SOC to 80% until a given time of day or to limit the charge power to leave power for other equipment such as a water heater for a given time. The flow has a link to the inverter data to input the present solar power ("generatorW") and the grid input and output power values ("meterinW", "meterOutW"). Note that after the recent (May 2024) update of the Sunny Home Manager you need your Grid Guard Code for this flow to work (set to 1234567890 here). I do not take any responsibility whatsoever for what you do with this code! There are nodes in the flow that periodically renew the GGC registers etc. because it has a timeout of 60min. (If it times out, you will have to restart the STP inverter (via its webinterface or by rewriting the GGC)). You have to enter the IP of your Sunny Home Manager in the Modbus configuration.
+
 All is "work in progress". The project runs in docker containers for node-RED, influxdb2, grafana and homeassistant using a Raspberry Pi 4 (4GB).
 
 ![Dashboard](https://github.com/airborneastro/photovoltaics/blob/main/Grafana_SMA_STP_SE10_part1.PNG)
