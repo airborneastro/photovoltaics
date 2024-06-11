@@ -1,8 +1,8 @@
 [
     {
-        "id": "60eafcdcc768bf97",
+        "id": "50860d5f28322c60",
         "type": "modbus-write",
-        "z": "e0bab2b89c54b234",
+        "z": "9060c91538b7ebf6",
         "name": "SHM Write GGC UnitID 1",
         "showStatusActivities": false,
         "showErrors": false,
@@ -16,17 +16,17 @@
         "keepMsgProperties": false,
         "delayOnStart": false,
         "startDelayTime": "",
-        "x": 630,
-        "y": 440,
+        "x": 690,
+        "y": 1140,
         "wires": [
             [],
             []
         ]
     },
     {
-        "id": "72cc82af14673813",
+        "id": "e72e4aae73462ac4",
         "type": "buffer-parser",
-        "z": "e0bab2b89c54b234",
+        "z": "9060c91538b7ebf6",
         "name": "",
         "data": "payload",
         "dataType": "msg",
@@ -66,19 +66,19 @@
         "fanOutMultipleResult": false,
         "setTopic": true,
         "outputs": 1,
-        "x": 470,
-        "y": 360,
+        "x": 530,
+        "y": 1060,
         "wires": [
             [
-                "632567fcc02048b9",
-                "60eafcdcc768bf97"
+                "74c22f3cd9e53120",
+                "50860d5f28322c60"
             ]
         ]
     },
     {
-        "id": "700bb231a59b80f2",
+        "id": "9e9b7f2ba7a539cb",
         "type": "buffer-maker",
-        "z": "e0bab2b89c54b234",
+        "z": "9060c91538b7ebf6",
         "name": "",
         "specification": "spec",
         "specificationType": "ui",
@@ -99,18 +99,18 @@
         "swap3Type": "swap",
         "msgProperty": "payload",
         "msgPropertyType": "str",
-        "x": 310,
-        "y": 360,
+        "x": 370,
+        "y": 1060,
         "wires": [
             [
-                "72cc82af14673813"
+                "e72e4aae73462ac4"
             ]
         ]
     },
     {
-        "id": "632567fcc02048b9",
+        "id": "74c22f3cd9e53120",
         "type": "debug",
-        "z": "e0bab2b89c54b234",
+        "z": "9060c91538b7ebf6",
         "name": "debug 73",
         "active": true,
         "tosidebar": true,
@@ -120,14 +120,14 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 640,
-        "y": 360,
+        "x": 700,
+        "y": 1060,
         "wires": []
     },
     {
-        "id": "631af9eb684771bc",
+        "id": "b829aac8349b075b",
         "type": "inject",
-        "z": "e0bab2b89c54b234",
+        "z": "9060c91538b7ebf6",
         "name": "Send GGC",
         "props": [
             {
@@ -145,18 +145,18 @@
         "topic": "",
         "payload": "1234567890",
         "payloadType": "num",
-        "x": 120,
-        "y": 360,
+        "x": 180,
+        "y": 1060,
         "wires": [
             [
-                "700bb231a59b80f2"
+                "9e9b7f2ba7a539cb"
             ]
         ]
     },
     {
-        "id": "c003e3441253b032",
+        "id": "44ba623e8dd3e9b8",
         "type": "change",
-        "z": "e0bab2b89c54b234",
+        "z": "9060c91538b7ebf6",
         "name": "nein, neu setzen",
         "rules": [
             {
@@ -172,18 +172,18 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 580,
-        "y": 300,
+        "x": 640,
+        "y": 1000,
         "wires": [
             [
-                "700bb231a59b80f2"
+                "9e9b7f2ba7a539cb"
             ]
         ]
     },
     {
-        "id": "b37186ce94322bbe",
+        "id": "3307e1b56ffa40f1",
         "type": "switch",
-        "z": "e0bab2b89c54b234",
+        "z": "9060c91538b7ebf6",
         "name": "GGC noch an?",
         "property": "payload[1]",
         "propertyType": "msg",
@@ -197,18 +197,18 @@
         "checkall": "true",
         "repair": false,
         "outputs": 1,
-        "x": 380,
-        "y": 300,
+        "x": 440,
+        "y": 1000,
         "wires": [
             [
-                "c003e3441253b032"
+                "44ba623e8dd3e9b8"
             ]
         ]
     },
     {
-        "id": "91167a6e47e00e0b",
+        "id": "4fcf1a2f68a90704",
         "type": "modbus-read",
-        "z": "e0bab2b89c54b234",
+        "z": "9060c91538b7ebf6",
         "name": "SHM read UID 1",
         "topic": "",
         "showStatusActivities": false,
@@ -228,20 +228,20 @@
         "ioFile": "",
         "useIOForPayload": false,
         "emptyMsgOnFail": false,
-        "x": 140,
-        "y": 280,
+        "x": 200,
+        "y": 980,
         "wires": [
             [
-                "0e4abdab4add1cc8",
-                "b37186ce94322bbe"
+                "7fac5228acbad917",
+                "3307e1b56ffa40f1"
             ],
             []
         ]
     },
     {
-        "id": "0e4abdab4add1cc8",
+        "id": "7fac5228acbad917",
         "type": "debug",
-        "z": "e0bab2b89c54b234",
+        "z": "9060c91538b7ebf6",
         "name": "debug 71",
         "active": true,
         "tosidebar": true,
@@ -250,14 +250,14 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 560,
-        "y": 260,
+        "x": 620,
+        "y": 960,
         "wires": []
     },
     {
-        "id": "043f7dfcdcce8952",
+        "id": "45177c5d3cf04822",
         "type": "function",
-        "z": "e0bab2b89c54b234",
+        "z": "9060c91538b7ebf6",
         "name": "Ladesteuerung",
         "func": "var d = new Date(msg.time);\nvar hour =d.getHours();\nvar Ladeleistung = 500;\nif (msg.payload.meterInW > 100) {\n    msg.payload = { value: [0,0], 'fc': 16, 'unitid': 2, 'address': 40149 , 'quantity': 2 };\n    //Netzbezug > 100W, Laden/Entladen frei\"\n    return msg;\n}\nif ((msg.payload.meterOutW > 50 ) && (msg.payload.batSOC >= 80) && (hour < 13)) {\n   //msg.payload.txt = \"2 Einspeisung > 50W, SOC >=80%, kein Laden/Entladen bis 15 Uhr (UTC+2)\"\n   msg.payload = { value: [65535,65535], 'fc': 16, 'unitid': 2, 'address': 40149 , 'quantity': 2 };\n    return msg; //Ladebegrenzung (-1)\n}\nif ((msg.payload.generatorW > 3000) && (msg.payload.batSOC < 80) && (msg.payload.batSOC >= 40) && hour < 10) {\n    msg.payload = { value: [65535,65535-Ladeleistung +1], 'fc': 16, 'unitid': 2, 'address': 40149 , 'quantity': 2 };\n    //Laden nur 500W vor 12 Uhr wenn PV>3000 und SOC<80%\n    //Leistung für Heizstab übrig!\n\n    return msg;\n}\n\nmsg.payload = { value: [0,0], 'fc': 16, 'unitid': 2, 'address': 40149 , 'quantity': 2 };\n//Normalbtrieb immer sonst\nreturn msg\n\n\n\n",
         "outputs": 1,
@@ -266,35 +266,35 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 480,
-        "y": 780,
+        "x": 560,
+        "y": 1280,
         "wires": [
             [
-                "1aefe5b7f49f8264",
-                "a7bc36629e5693cd"
+                "fae69ab6a19448a6",
+                "684471680bd738d1"
             ]
         ]
     },
     {
-        "id": "944131d02e4147e1",
+        "id": "8627da9265d47e91",
         "type": "link in",
-        "z": "e0bab2b89c54b234",
+        "z": "9060c91538b7ebf6",
         "name": "link in 3",
         "links": [
             "d813fbb730aaac4b"
         ],
-        "x": 75,
-        "y": 780,
+        "x": 155,
+        "y": 1280,
         "wires": [
             [
-                "850843906543b3d8"
+                "65a93a223676b062"
             ]
         ]
     },
     {
-        "id": "1aefe5b7f49f8264",
+        "id": "fae69ab6a19448a6",
         "type": "debug",
-        "z": "e0bab2b89c54b234",
+        "z": "9060c91538b7ebf6",
         "name": "debug 80",
         "active": false,
         "tosidebar": true,
@@ -304,14 +304,14 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 640,
-        "y": 720,
+        "x": 720,
+        "y": 1220,
         "wires": []
     },
     {
-        "id": "850843906543b3d8",
+        "id": "65a93a223676b062",
         "type": "change",
-        "z": "e0bab2b89c54b234",
+        "z": "9060c91538b7ebf6",
         "name": "",
         "rules": [
             {
@@ -327,19 +327,19 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 240,
-        "y": 780,
+        "x": 320,
+        "y": 1280,
         "wires": [
             [
-                "043f7dfcdcce8952",
-                "c487e10dc8bfc4e7"
+                "45177c5d3cf04822",
+                "4bb50bf07265a532"
             ]
         ]
     },
     {
-        "id": "c487e10dc8bfc4e7",
+        "id": "4bb50bf07265a532",
         "type": "debug",
-        "z": "e0bab2b89c54b234",
+        "z": "9060c91538b7ebf6",
         "name": "debug 81",
         "active": false,
         "tosidebar": true,
@@ -349,14 +349,14 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 390,
-        "y": 860,
+        "x": 470,
+        "y": 1360,
         "wires": []
     },
     {
-        "id": "a7bc36629e5693cd",
+        "id": "684471680bd738d1",
         "type": "rbe",
-        "z": "e0bab2b89c54b234",
+        "z": "9060c91538b7ebf6",
         "name": "",
         "func": "rbe",
         "gap": "",
@@ -365,19 +365,19 @@
         "septopics": false,
         "property": "payload",
         "topi": "topic",
-        "x": 650,
-        "y": 780,
+        "x": 730,
+        "y": 1280,
         "wires": [
             [
-                "656da3e2e95cba09",
-                "79fb45155ca31bf6"
+                "c68a6c8816554dae",
+                "d66ecb459dc116f5"
             ]
         ]
     },
     {
-        "id": "656da3e2e95cba09",
+        "id": "c68a6c8816554dae",
         "type": "debug",
-        "z": "e0bab2b89c54b234",
+        "z": "9060c91538b7ebf6",
         "name": "debug 83",
         "active": true,
         "tosidebar": true,
@@ -386,14 +386,14 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 840,
-        "y": 720,
+        "x": 920,
+        "y": 1220,
         "wires": []
     },
     {
-        "id": "4528af7ae977d2a7",
+        "id": "66839d885e1715f2",
         "type": "inject",
-        "z": "e0bab2b89c54b234",
+        "z": "9060c91538b7ebf6",
         "name": "Filter reset",
         "props": [
             {
@@ -407,18 +407,18 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 590,
-        "y": 860,
+        "x": 670,
+        "y": 1360,
         "wires": [
             [
-                "a7bc36629e5693cd"
+                "684471680bd738d1"
             ]
         ]
     },
     {
-        "id": "c30ae36ce3c5c4a1",
+        "id": "7ca773cb9b3a8477",
         "type": "debug",
-        "z": "e0bab2b89c54b234",
+        "z": "9060c91538b7ebf6",
         "name": "debug 84",
         "active": true,
         "tosidebar": true,
@@ -427,14 +427,14 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1040,
-        "y": 760,
+        "x": 1120,
+        "y": 1260,
         "wires": []
     },
     {
-        "id": "79fb45155ca31bf6",
+        "id": "d66ecb459dc116f5",
         "type": "modbus-flex-write",
-        "z": "e0bab2b89c54b234",
+        "z": "9060c91538b7ebf6",
         "name": "Ladesteuerung",
         "showStatusActivities": false,
         "showErrors": false,
@@ -444,12 +444,276 @@
         "keepMsgProperties": false,
         "delayOnStart": false,
         "startDelayTime": "",
-        "x": 880,
-        "y": 780,
+        "x": 960,
+        "y": 1280,
         "wires": [
             [
-                "c30ae36ce3c5c4a1"
+                "7ca773cb9b3a8477"
             ],
+            []
+        ]
+    },
+    {
+        "id": "da4d25befe1bbffb",
+        "type": "buffer-parser",
+        "z": "9060c91538b7ebf6",
+        "name": "",
+        "data": "payload",
+        "dataType": "msg",
+        "specification": "spec",
+        "specificationType": "ui",
+        "items": [
+            {
+                "type": "uint16be",
+                "name": "item1",
+                "offset": 0,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "uint16be",
+                "name": "item2",
+                "offset": 2,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            }
+        ],
+        "swap1": "",
+        "swap2": "",
+        "swap3": "",
+        "swap1Type": "swap",
+        "swap2Type": "swap",
+        "swap3Type": "swap",
+        "msgProperty": "payload",
+        "msgPropertyType": "str",
+        "resultType": "value",
+        "resultTypeType": "return",
+        "multipleResult": false,
+        "fanOutMultipleResult": false,
+        "setTopic": true,
+        "outputs": 1,
+        "x": 550,
+        "y": 1440,
+        "wires": [
+            [
+                "4984b8263a9a40ba"
+            ]
+        ]
+    },
+    {
+        "id": "171b813c25e8d116",
+        "type": "buffer-maker",
+        "z": "9060c91538b7ebf6",
+        "name": "",
+        "specification": "spec",
+        "specificationType": "ui",
+        "items": [
+            {
+                "name": "item1",
+                "type": "uint32be",
+                "length": 1,
+                "dataType": "msg",
+                "data": "payload"
+            }
+        ],
+        "swap1": "",
+        "swap2": "",
+        "swap3": "",
+        "swap1Type": "swap",
+        "swap2Type": "swap",
+        "swap3Type": "swap",
+        "msgProperty": "payload",
+        "msgPropertyType": "str",
+        "x": 390,
+        "y": 1440,
+        "wires": [
+            [
+                "da4d25befe1bbffb"
+            ]
+        ]
+    },
+    {
+        "id": "61d42f354f96c7e3",
+        "type": "inject",
+        "z": "9060c91538b7ebf6",
+        "name": "Aktiv 802",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "1800",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "802",
+        "payloadType": "num",
+        "x": 230,
+        "y": 1440,
+        "wires": [
+            [
+                "171b813c25e8d116"
+            ]
+        ]
+    },
+    {
+        "id": "4984b8263a9a40ba",
+        "type": "modbus-write",
+        "z": "9060c91538b7ebf6",
+        "name": "",
+        "showStatusActivities": false,
+        "showErrors": false,
+        "showWarnings": true,
+        "unitid": "2",
+        "dataType": "MHoldingRegisters",
+        "adr": "40151",
+        "quantity": "2",
+        "server": "3de61fa656f4e74e",
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 740,
+        "y": 1440,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "62c0a1871a0ebe67",
+        "type": "buffer-parser",
+        "z": "9060c91538b7ebf6",
+        "name": "",
+        "data": "payload",
+        "dataType": "msg",
+        "specification": "spec",
+        "specificationType": "ui",
+        "items": [
+            {
+                "type": "uint16be",
+                "name": "item1",
+                "offset": 0,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            },
+            {
+                "type": "uint16be",
+                "name": "item2",
+                "offset": 2,
+                "length": 1,
+                "offsetbit": 0,
+                "scale": "1",
+                "mask": ""
+            }
+        ],
+        "swap1": "",
+        "swap2": "",
+        "swap3": "",
+        "swap1Type": "swap",
+        "swap2Type": "swap",
+        "swap3Type": "swap",
+        "msgProperty": "payload",
+        "msgPropertyType": "str",
+        "resultType": "value",
+        "resultTypeType": "return",
+        "multipleResult": false,
+        "fanOutMultipleResult": false,
+        "setTopic": true,
+        "outputs": 1,
+        "x": 550,
+        "y": 1520,
+        "wires": [
+            [
+                "7ecdbb19bf38aff3"
+            ]
+        ]
+    },
+    {
+        "id": "62714c63d1e57ca9",
+        "type": "buffer-maker",
+        "z": "9060c91538b7ebf6",
+        "name": "",
+        "specification": "spec",
+        "specificationType": "ui",
+        "items": [
+            {
+                "name": "item1",
+                "type": "uint32be",
+                "length": 1,
+                "dataType": "msg",
+                "data": "payload"
+            }
+        ],
+        "swap1": "",
+        "swap2": "",
+        "swap3": "",
+        "swap1Type": "swap",
+        "swap2Type": "swap",
+        "swap3Type": "swap",
+        "msgProperty": "payload",
+        "msgPropertyType": "str",
+        "x": 390,
+        "y": 1520,
+        "wires": [
+            [
+                "62c0a1871a0ebe67"
+            ]
+        ]
+    },
+    {
+        "id": "00580d669807edaa",
+        "type": "inject",
+        "z": "9060c91538b7ebf6",
+        "name": "Inaktiv 803",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "803",
+        "payloadType": "num",
+        "x": 220,
+        "y": 1520,
+        "wires": [
+            [
+                "62714c63d1e57ca9"
+            ]
+        ]
+    },
+    {
+        "id": "7ecdbb19bf38aff3",
+        "type": "modbus-write",
+        "z": "9060c91538b7ebf6",
+        "name": "",
+        "showStatusActivities": false,
+        "showErrors": false,
+        "showWarnings": true,
+        "unitid": "2",
+        "dataType": "MHoldingRegisters",
+        "adr": "40151",
+        "quantity": "2",
+        "server": "3de61fa656f4e74e",
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 740,
+        "y": 1520,
+        "wires": [
+            [],
             []
         ]
     },
